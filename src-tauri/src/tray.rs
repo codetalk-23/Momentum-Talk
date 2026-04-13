@@ -87,9 +87,9 @@ pub fn tray_tooltip() -> String {
 
 fn version_label() -> String {
     if cfg!(debug_assertions) {
-        format!("Momentum v{} (Dev)", env!("CARGO_PKG_VERSION"))
+        format!("Momentum Talk v{} (Dev)", env!("CARGO_PKG_VERSION"))
     } else {
-        format!("Momentum v{}", env!("CARGO_PKG_VERSION"))
+        format!("Momentum Talk v{}", env!("CARGO_PKG_VERSION"))
     }
 }
 

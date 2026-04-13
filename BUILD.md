@@ -1,6 +1,6 @@
 # Build Instructions
 
-This guide covers how to set up the development environment and build Momentum from source across different platforms.
+This guide covers how to set up the development environment and build Momentum Talk from source across different platforms.
 
 ## Prerequisites
 

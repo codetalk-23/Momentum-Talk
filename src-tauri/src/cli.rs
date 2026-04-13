@@ -1,7 +1,7 @@
 use clap::Parser;
 
 #[derive(Parser, Debug, Clone, Default)]
-#[command(name = "Momentum", about = "Momentum - Speech to Text")]
+#[command(name = "Momentum Talk", about = "Momentum Talk - Speech to Text")]
 pub struct CliArgs {
     /// Start with the main window hidden
     #[arg(long)]

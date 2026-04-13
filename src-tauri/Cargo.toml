@@ -1,11 +1,11 @@
 [package]
-name = "Momentum"
+name = "Momentum-Talk"
 version = "0.8.2"
-description = "Momentum"
+description = "Momentum Talk"
 authors = ["cjpais"]
 edition = "2021"
 license = "MIT"
-default-run = "Momentum"
+default-run = "Momentum-Talk"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

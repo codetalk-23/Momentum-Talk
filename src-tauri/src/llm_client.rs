@@ -71,9 +71,9 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
     );
     headers.insert(
         USER_AGENT,
-        HeaderValue::from_static("Momentum/1.0 (+https://github.com/cjpais/Momentum)"),
+        HeaderValue::from_static("Momentum Talk/1.0 (+https://github.com/cjpais/Momentum)"),
     );
-    headers.insert("X-Title", HeaderValue::from_static("Momentum"));
+    headers.insert("X-Title", HeaderValue::from_static("Momentum Talk"));
 
     // Provider-specific auth headers
     if !api_key.is_empty() {

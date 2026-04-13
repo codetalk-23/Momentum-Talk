@@ -1,27 +1,27 @@
-# Momentum
+# Momentum Talk
 
 [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/WVBeWsNXK4)
 
 **A free, open source, and extensible speech-to-text application that works completely offline.**
 
-Momentum is a cross-platform desktop application that provides simple, privacy-focused speech transcription. Press a shortcut, speak, and have your words appear in any text field. This happens on your own computer without sending any information to the cloud.
+Momentum Talk is a cross-platform desktop application that provides simple, privacy-focused speech transcription. Press a shortcut, speak, and have your words appear in any text field. This happens on your own computer without sending any information to the cloud.
 
-## Why Momentum?
+## Why Momentum Talk?
 
-Momentum was created to fill the gap for a truly open source, extensible speech-to-text tool. As stated on [Momentum.computer](https://Momentum.computer):
+Momentum Talk was created to fill the gap for a truly open source, extensible speech-to-text tool. As stated on [Momentum.computer](https://Momentum.computer):
 
 - **Free**: Accessibility tooling belongs in everyone's hands, not behind a paywall
-- **Open Source**: Together we can build further. Extend Momentum for yourself and contribute to something bigger
+- **Open Source**: Together we can build further. Extend Momentum Talk for yourself and contribute to something bigger
 - **Private**: Your voice stays on your computer. Get transcriptions without sending audio to the cloud
 - **Simple**: One tool, one job. Transcribe what you say and put it into a text box
 
-Momentum isn't trying to be the best speech-to-text app—it's trying to be the most forkable one.
+Momentum Talk isn't trying to be the best speech-to-text app—it's trying to be the most forkable one.
 
 ## How It Works
 
 1. **Press** a configurable keyboard shortcut to start/stop recording (or use push-to-talk mode)
 2. **Speak** your words while the shortcut is active
-3. **Release** and Momentum processes your speech using Whisper
+3. **Release** and Momentum Talk processes your speech using Whisper
 4. **Get** your transcribed text pasted directly into whatever app you're using
 
 The process is entirely local:
@@ -39,9 +39,9 @@ The process is entirely local:
 1. Download the latest release from the [releases page](https://github.com/cjpais/Momentum/releases) or the [website](https://Momentum.computer)
    - **macOS**: Also available via [Homebrew cask](https://formulae.brew.sh/cask/Momentum): `brew install --cask Momentum`
    - **Windows**: Also available via [winget](https://github.com/microsoft/winget-pkgs): `winget install cjpais.Momentum` \
-     **Note:** The Homebrew cask and winget package are not maintained by the Momentum developers.
+     **Note:** The Homebrew cask and winget package are not maintained by the Momentum Talk developers.
 2. Install the application
-3. Launch Momentum and grant necessary system permissions (microphone, accessibility)
+3. Launch Momentum Talk and grant necessary system permissions (microphone, accessibility)
 4. Configure your preferred keyboard shortcuts in Settings
 5. Start transcribing!
 
@@ -59,7 +59,7 @@ Control Momentum from [Raycast](https://www.raycast.com) — start/stop recordin
 
 ## Architecture
 
-Momentum is built as a Tauri application combining:
+Momentum Talk is built as a Tauri application combining:
 
 - **Frontend**: React + TypeScript with Tailwind CSS for the settings UI
 - **Backend**: Rust for system integration, audio processing, and ML inference
@@ -73,14 +73,14 @@ Momentum is built as a Tauri application combining:
 
 ### Debug Mode
 
-Momentum includes an advanced debug mode for development and troubleshooting. Access it by pressing:
+Momentum Talk includes an advanced debug mode for development and troubleshooting. Access it by pressing:
 
 - **macOS**: `Cmd+Shift+D`
 - **Windows/Linux**: `Ctrl+Shift+D`
 
 ### CLI Parameters
 
-Momentum supports command-line flags for controlling a running instance and customizing startup behavior. These work on all platforms (macOS, Windows, Linux).
+Momentum Talk supports command-line flags for controlling a running instance and customizing startup behavior. These work on all platforms (macOS, Windows, Linux).
 
 **Remote control flags** (sent to an already-running instance via the single-instance plugin):
 
@@ -105,7 +105,7 @@ Flags can be combined for autostart scenarios:
 Momentum --start-hidden --no-tray
 ```
 
-> **macOS tip:** When Momentum is installed as an app bundle, invoke the binary directly:
+> **macOS tip:** When Momentum Talk is installed as an app bundle, invoke the binary directly:
 >
 > ```bash
 > /Applications/Momentum.app/Contents/MacOS/Momentum --toggle-transcription
@@ -113,7 +113,7 @@ Momentum --start-hidden --no-tray
 
 ## Known Issues & Current Limitations
 
-This project is actively being developed and has some [known issues](https://github.com/cjpais/Momentum/issues). We believe in transparency about the current state:
+This project is actively being developed and has some [known issues](https://github.com/cjpais/Momentum/issues). We believe in transparency about the current state of Momentum Talk:
 
 ### Major Issues (Help Wanted)
 
@@ -144,12 +144,12 @@ For reliable text input on Linux, install the appropriate tool for your display 
 - **Wayland**: Install `wtype` (preferred) or `dotool` for text input to work correctly
 - **dotool setup**: Requires adding your user to the `input` group: `sudo usermod -aG input $USER` (then log out and back in)
 
-Without these tools, Momentum falls back to enigo which may have limited compatibility, especially on Wayland.
+Without these tools, Momentum Talk falls back to enigo which may have limited compatibility, especially on Wayland.
 
 **Other Notes:**
 
 - **Runtime library dependency (`libgtk-layer-shell.so.0`)**:
-  - Momentum links `gtk-layer-shell` on Linux. If startup fails with `error while loading shared libraries: libgtk-layer-shell.so.0`, install the runtime package for your distro:
+  - Momentum Talk links `gtk-layer-shell` on Linux. If startup fails with `error while loading shared libraries: libgtk-layer-shell.so.0`, install the runtime package for your distro:
 
     | Distro        | Package to install    | Example command                        |
     | ------------- | --------------------- | -------------------------------------- |
@@ -159,31 +159,31 @@ Without these tools, Momentum falls back to enigo which may have limited compati
 
   - For building from source on Ubuntu/Debian, you may also need `libgtk-layer-shell-dev`.
 
-- The recording overlay is disabled by default on Linux (`Overlay Position: None`) because certain compositors treat it as the active window. When the overlay is visible it can steal focus, which prevents Momentum from pasting back into the application that triggered transcription. If you enable the overlay anyway, be aware that clipboard-based pasting might fail or end up in the wrong window.
+- The recording overlay is disabled by default on Linux (`Overlay Position: None`) because certain compositors treat it as the active window. When the overlay is visible it can steal focus, which prevents Momentum Talk from pasting back into the application that triggered transcription. If you enable the overlay anyway, be aware that clipboard-based pasting might fail or end up in the wrong window.
 - If you are having trouble with the app, running with the environment variable `WEBKIT_DISABLE_DMABUF_RENDERER=1` may help
-- If Momentum fails to start reliably on Linux, see [Troubleshooting → Linux Startup Crashes or Instability](#linux-startup-crashes-or-instability).
+- If Momentum Talk fails to start reliably on Linux, see [Troubleshooting → Linux Startup Crashes or Instability](#linux-startup-crashes-or-instability).
 - **Global keyboard shortcuts (Wayland):** On Wayland, system-level shortcuts must be configured through your desktop environment or window manager. Use the [CLI flags](#cli-parameters) as the command for your custom shortcut.
 
   **GNOME:**
   1. Open **Settings > Keyboard > Keyboard Shortcuts > Custom Shortcuts**
   2. Click the **+** button to add a new shortcut
-  3. Set the **Name** to `Toggle Momentum Transcription`
-  4. Set the **Command** to `Momentum --toggle-transcription`
+  3. Set the **Name** to `Toggle Momentum Talk Transcription`
+  4. Set the **Command** to `Momentum Talk --toggle-transcription`
   5. Click **Set Shortcut** and press your desired key combination (e.g., `Super+O`)
 
   **KDE Plasma:**
   1. Open **System Settings > Shortcuts > Custom Shortcuts**
   2. Click **Edit > New > Global Shortcut > Command/URL**
-  3. Name it `Toggle Momentum Transcription`
+  3. Name it `Toggle Momentum Talk Transcription`
   4. In the **Trigger** tab, set your desired key combination
-  5. In the **Action** tab, set the command to `Momentum --toggle-transcription`
+  5. In the **Action** tab, set the command to `Momentum Talk --toggle-transcription`
 
   **Sway / i3:**
 
   Add to your config file (`~/.config/sway/config` or `~/.config/i3/config`):
 
   ```ini
-  bindsym $mod+o exec Momentum --toggle-transcription
+  bindsym $mod+o exec Momentum Talk --toggle-transcription
   ```
 
   **Hyprland:**
@@ -191,21 +191,21 @@ Without these tools, Momentum falls back to enigo which may have limited compati
   Add to your config file (`~/.config/hypr/hyprland.conf`):
 
   ```ini
-  bind = $mainMod, O, exec, Momentum --toggle-transcription
+  bind = $mainMod, O, exec, Momentum Talk --toggle-transcription
   ```
 
-- You can also manage global shortcuts outside of Momentum via Unix signals, which lets Wayland window managers or other hotkey daemons keep ownership of keybindings:
+- You can also manage global shortcuts outside of Momentum Talk via Unix signals, which lets Wayland window managers or other hotkey daemons keep ownership of keybindings:
 
   | Signal    | Action                                    | Example                |
   | --------- | ----------------------------------------- | ---------------------- |
-  | `SIGUSR2` | Toggle transcription                      | `pkill -USR2 -n Momentum` |
-  | `SIGUSR1` | Toggle transcription with post-processing | `pkill -USR1 -n Momentum` |
+  | `SIGUSR2` | Toggle transcription                      | `pkill -USR2 -n Momentum Talk` |
+  | `SIGUSR1` | Toggle transcription with post-processing | `pkill -USR1 -n Momentum Talk` |
 
   Example Sway config:
 
   ```ini
-  bindsym $mod+o exec pkill -USR2 -n Momentum
-  bindsym $mod+p exec pkill -USR1 -n Momentum
+  bindsym $mod+o exec pkill -USR2 -n Momentum Talk
+  bindsym $mod+p exec pkill -USR1 -n Momentum Talk
   ```
 
   `pkill` here simply delivers the signal—it does not terminate the process.
@@ -303,11 +303,11 @@ Do not use `gpg` for these `.sig` files.
 
 ### Manual Model Installation (For Proxy Users or Network Restrictions)
 
-If you're behind a proxy, firewall, or in a restricted network environment where Momentum cannot download models automatically, you can manually download and install them. The URLs are publicly accessible from any browser.
+If you're behind a proxy, firewall, or in a restricted network environment where Momentum Talk cannot download models automatically, you can manually download and install them. The URLs are publicly accessible from any browser.
 
 #### Step 1: Find Your App Data Directory
 
-1. Open Momentum settings
+1. Open Momentum Talk settings
 2. Navigate to the **About** section
 3. Copy the "App Data Directory" path shown there, or use the shortcuts:
    - **macOS**: `Cmd+Shift+D` to open debug menu
@@ -389,14 +389,14 @@ Final structure should look like:
 
 #### Step 5: Verify Installation
 
-1. Restart Momentum
+1. Restart Momentum Talk
 2. Open Settings → Models
 3. Your manually installed models should now appear as "Downloaded"
 4. Select the model you want to use and test transcription
 
 ### Custom Whisper Models
 
-Momentum can auto-discover custom Whisper GGML models placed in the `models` directory. This is useful for users who want to use fine-tuned or community models not included in the default model list.
+Momentum Talk can auto-discover custom Whisper GGML models placed in the `models` directory. This is useful for users who want to use fine-tuned or community models not included in the default model list.
 
 **How to use:**
 
@@ -413,11 +413,11 @@ Momentum can auto-discover custom Whisper GGML models placed in the `models` dir
 
 ### Linux Startup Crashes or Instability
 
-If Momentum fails to start reliably on Linux — for example, it crashes shortly after launch, never shows its window, or reports a Wayland protocol error — try the steps below in order.
+If Momentum Talk fails to start reliably on Linux — for example, it crashes shortly after launch, never shows its window, or reports a Wayland protocol error — try the steps below in order.
 
 **1. Install (or reinstall) `gtk-layer-shell`**
 
-Momentum uses `gtk-layer-shell` for its recording overlay and links against it at runtime. A missing or broken installation is the most common cause of startup failures and can manifest as a crash or a hang well before any window is shown. Make sure the runtime package is installed for your distro:
+Momentum Talk uses `gtk-layer-shell` for its recording overlay and links against it at runtime. A missing or broken installation is the most common cause of startup failures and can manifest as a crash or a hang well before any window is shown. Make sure the runtime package is installed for your distro:
 
 | Distro        | Package to install    | Example command                        |
 | ------------- | --------------------- | -------------------------------------- |
@@ -432,7 +432,7 @@ If it is already installed and you still see startup problems, try reinstalling 
 If installing the library does not help, you can skip `gtk-layer-shell` initialization entirely as a workaround. On some compositors (notably KDE Plasma under Wayland) it has been reported to interact poorly with the recording overlay. With this variable set, the overlay falls back to a regular always-on-top window:
 
 ```bash
-HANDY_NO_GTK_LAYER_SHELL=1 Momentum
+HANDY_NO_GTK_LAYER_SHELL=1 Momentum Talk
 ```
 
 **3. Disable WebKit DMA-BUF renderer (`WEBKIT_DISABLE_DMABUF_RENDERER`)**
@@ -440,15 +440,15 @@ HANDY_NO_GTK_LAYER_SHELL=1 Momentum
 On some GPU/driver combinations the WebKitGTK DMA-BUF renderer can cause the window to fail to render or to crash. Try:
 
 ```bash
-WEBKIT_DISABLE_DMABUF_RENDERER=1 Momentum
+WEBKIT_DISABLE_DMABUF_RENDERER=1 Momentum Talk
 ```
 
 **Making a workaround permanent**
 
-Once you've found a flag that helps, export it from your shell profile (`~/.bashrc`, `~/.zshenv`, …) or from the desktop autostart entry that launches Momentum. If you launch Momentum from a `.desktop` file, you can prefix the `Exec=` line, e.g.:
+Once you've found a flag that helps, export it from your shell profile (`~/.bashrc`, `~/.zshenv`, …) or from the desktop autostart entry that launches Momentum Talk. If you launch Momentum Talk from a `.desktop` file, you can prefix the `Exec=` line, e.g.:
 
 ```ini
-Exec=env HANDY_NO_GTK_LAYER_SHELL=1 Momentum
+Exec=env HANDY_NO_GTK_LAYER_SHELL=1 Momentum Talk
 ```
 
 If a workaround helps you, please [open an issue](https://github.com/cjpais/Momentum/issues) describing your distro, desktop environment, and session type — that information helps us narrow down the underlying bug.
@@ -466,7 +466,7 @@ The goal is to create both a useful tool and a foundation for others to build up
 ## Sponsors
 
 <div align="center">
-  We're grateful for the support of our sponsors who help make Momentum possible:
+  We're grateful for the support of our sponsors who help make Momentum Talk possible:
   <br><br>
   <a href="https://wordcab.com">
     <img src="sponsor-images/wordcab.png" alt="Wordcab" width="120" height="120">
@@ -496,4 +496,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - **whisper.cpp and ggml** for amazing cross-platform whisper inference/acceleration
 - **Silero** for great lightweight VAD
 - **Tauri** team for the excellent Rust-based app framework
-- **Community contributors** helping make Momentum better
+- **Community contributors** helping make Momentum Talk better
