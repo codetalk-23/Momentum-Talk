@@ -5,7 +5,6 @@ import {
   formatKeyCombination,
   normalizeKey,
 } from "../../lib/utils/keyboard";
-import { ResetButton } from "../ui/ResetButton";
 import { SettingContainer } from "../ui/SettingContainer";
 import { useSettings } from "../../hooks/useSettings";
 import { useOsType } from "../../hooks/useOsType";
@@ -271,26 +270,37 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
       disabled={disabled}
       layout="horizontal"
     >
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center">
         {editingShortcutId === shortcutId ? (
           <div
             ref={(ref) => setShortcutRef(shortcutId, ref)}
-            className="px-2 py-1 text-sm font-semibold border border-accent bg-accent/30 rounded-md"
+            style={{
+              background: "#F5F4F0",
+              border: "1px solid #1A3D2B",
+              borderRadius: 5,
+              padding: "4px 10px",
+              fontSize: 12,
+              fontWeight: 600,
+            }}
           >
             {formatCurrentKeys()}
           </div>
         ) : (
           <div
-            className="px-2 py-1 text-sm font-semibold bg-background-secondary border border-border-color hover:bg-accent/10 rounded-md cursor-pointer hover:border-accent"
             onClick={() => startRecording(shortcutId)}
+            style={{
+              background: "#F5F4F0",
+              border: "1px solid #E8E8E8",
+              borderRadius: 5,
+              padding: "4px 10px",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
           >
             {formatKeyCombination(binding.current_binding, osType)}
           </div>
         )}
-        <ResetButton
-          onClick={() => resetBinding(shortcutId)}
-          disabled={isUpdating(`binding_${shortcutId}`)}
-        />
       </div>
     </SettingContainer>
   );

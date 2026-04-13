@@ -33,24 +33,34 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
       disabled={disabled}
       tooltipPosition={tooltipPosition}
     >
-      <label
-        className={`inline-flex items-center ${disabled || isUpdating ? "cursor-not-allowed" : "cursor-pointer"}`}
+      <button
+        role="switch"
+        aria-checked={checked}
+        disabled={disabled || isUpdating}
+        onClick={() => onChange(!checked)}
+        className={`relative inline-flex shrink-0 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/40 ${disabled || isUpdating ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+        style={{
+          width: 36,
+          height: 20,
+          borderRadius: 10,
+          background: checked ? "#1A3D2B" : "#E8E8E8",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+          transition: "background 0.2s",
+        }}
       >
-        <input
-          type="checkbox"
-          value=""
-          className="sr-only peer"
-          checked={checked}
-          disabled={disabled || isUpdating}
-          onChange={(e) => onChange(e.target.checked)}
+        <span
+          style={{
+            position: "absolute",
+            top: 2,
+            left: checked ? 18 : 2,
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            background: "#FFFFFF",
+            transition: "left 0.2s",
+          }}
         />
-        <div className="relative w-11 h-6 bg-border-color peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-border-color after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent peer-disabled:opacity-50"></div>
-      </label>
-      {isUpdating && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      )}
+      </button>
     </SettingContainer>
   );
 };

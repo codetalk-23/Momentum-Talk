@@ -5,7 +5,7 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 6px;
-  background: #000000cc;
+  background: rgba(10, 10, 10, 0.88);
   border-radius: 18px;
   opacity: 0;
   transition: opacity 300ms ease-out;
@@ -41,7 +41,7 @@
 
 .bar {
   width: 6px;
-  background: #ffe5ee;
+  background: #52b788;
   max-height: 20px;
   border-radius: 2px;
   transition: height 80ms linear;
@@ -86,7 +86,7 @@
 }
 
 .cancel-button:hover {
-  background: #faa2ca33;
+  background: rgba(82, 183, 136, 0.2);
   transform: scale(1.05);
 }
 

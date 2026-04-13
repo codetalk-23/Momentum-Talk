@@ -166,6 +166,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
       try {
         if (permissionPlatform === "windows") {
           const microphoneGranted = await hasWindowsMicrophoneAccess();
+          console.log("[Polling] Windows microphone granted:", microphoneGranted);
 
           if (microphoneGranted) {
             setPermissions((prev) => ({ ...prev, microphone: "granted" }));
@@ -186,6 +187,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
           checkAccessibilityPermission(),
           checkMicrophonePermission(),
         ]);
+        console.log("[Polling] macOS permissions - accessibility:", accessibilityGranted, "microphone:", microphoneGranted);
 
         setPermissions((prev) => {
           const newState = { ...prev };
@@ -220,8 +222,8 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
         // Reset error count on success
         errorCountRef.current = 0;
       } catch (error) {
-        console.error("Error checking permissions:", error);
         errorCountRef.current += 1;
+        console.error(`[Polling] Error (attempt ${errorCountRef.current}/${MAX_POLLING_ERRORS}):`, error);
 
         if (errorCountRef.current >= MAX_POLLING_ERRORS) {
           // Stop polling after too many consecutive errors
@@ -229,6 +231,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
             clearInterval(pollingRef.current);
             pollingRef.current = null;
           }
+          console.error("[Polling] Max errors reached, stopping polling");
           toast.error(t("onboarding.permissions.errors.checkFailed"));
         }
       }
@@ -260,12 +263,14 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
   const handleGrantMicrophone = async () => {
     try {
+      console.log(`[Grant Microphone] Requesting on ${isWindows ? "Windows" : "macOS"}`);
       if (isWindows) {
         await commands.openMicrophonePrivacySettings();
       } else {
         await requestMicrophonePermission();
       }
 
+      console.log("[Grant Microphone] Request completed, starting polling");
       setPermissions((prev) => ({ ...prev, microphone: "waiting" }));
       startPolling();
     } catch (error) {
@@ -323,7 +328,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
         {/* Microphone Permission Card */}
         {showMicrophonePermission && (
-          <div className="w-full p-4 rounded-lg bg-white/5 border border-border-color">
+          <div className="w-full p-4 rounded-lg bg-background-secondary border border-border-color">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-full bg-accent/20 shrink-0">
                 <Mic className="w-6 h-6 text-accent" />
@@ -348,7 +353,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                 ) : (
                   <button
                     onClick={handleGrantMicrophone}
-                    className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/80 text-white text-sm font-medium transition-colors cursor-pointer active:scale-95"
+                    className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/80 text-slate-950 text-sm font-medium transition-colors cursor-pointer active:scale-95"
                   >
                     {isWindows
                       ? t("accessibility.openSettings")
@@ -362,7 +367,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
         {/* Accessibility Permission Card */}
         {showAccessibilityPermission && (
-          <div className="w-full p-4 rounded-lg bg-white/5 border border-border-color">
+          <div className="w-full p-4 rounded-lg bg-background-secondary border border-border-color">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-full bg-accent/20 shrink-0">
                 <Keyboard className="w-6 h-6 text-accent" />
@@ -387,7 +392,7 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                 ) : (
                   <button
                     onClick={handleGrantAccessibility}
-                    className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/80 text-white text-sm font-medium transition-colors cursor-pointer active:scale-95"
+                    className="px-4 py-2 rounded-lg bg-accent hover:bg-accent/80 text-slate-950 text-sm font-medium transition-colors cursor-pointer active:scale-95"
                   >
                     {t("onboarding.permissions.grant")}
                   </button>

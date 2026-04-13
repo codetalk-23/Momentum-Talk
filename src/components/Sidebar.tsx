@@ -1,8 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Cog, FlaskConical, History, Info, Sparkles, Cpu } from "lucide-react";
 import MomentumainlLogo from "./icons/MomentumainlLogo";
-import HandyHand from "./icons/HandyHand";
 import { useSettings } from "../hooks/useSettings";
 import {
   GeneralSettings,
@@ -16,65 +14,57 @@ import {
 
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
 
-interface IconProps {
-  width?: number | string;
-  height?: number | string;
-  size?: number | string;
-  className?: string;
-  [key: string]: any;
-}
-
 interface SectionConfig {
   labelKey: string;
-  icon: React.ComponentType<IconProps>;
   component: React.ComponentType;
   enabled: (settings: any) => boolean;
+  visibleInNav: boolean;
 }
 
 export const SECTIONS_CONFIG = {
   general: {
     labelKey: "sidebar.general",
-    icon: HandyHand,
     component: GeneralSettings,
-    enabled: () => true,
+    enabled: (_?: any) => true,
+    visibleInNav: true,
   },
   models: {
     labelKey: "sidebar.models",
-    icon: Cpu,
     component: ModelsSettings,
-    enabled: () => true,
+    enabled: (_?: any) => true,
+    visibleInNav: false,
   },
   advanced: {
     labelKey: "sidebar.advanced",
-    icon: Cog,
     component: AdvancedSettings,
-    enabled: () => true,
+    enabled: (_?: any) => true,
+    visibleInNav: true,
   },
   history: {
     labelKey: "sidebar.history",
-    icon: History,
     component: HistorySettings,
-    enabled: () => true,
+    enabled: (_?: any) => true,
+    visibleInNav: true,
   },
   postprocessing: {
     labelKey: "sidebar.postProcessing",
-    icon: Sparkles,
     component: PostProcessingSettings,
     enabled: (settings) => settings?.post_process_enabled ?? false,
+    visibleInNav: false,
   },
   debug: {
     labelKey: "sidebar.debug",
-    icon: FlaskConical,
     component: DebugSettings,
     enabled: (settings) => settings?.debug_mode ?? false,
+    visibleInNav: false,
   },
   about: {
     labelKey: "sidebar.about",
-    icon: Info,
     component: AboutSettings,
-    enabled: () => true,
+    enabled: (_?: any) => true,
+    visibleInNav: true,
   },
-} as const satisfies Record<string, SectionConfig>;
+} satisfies Record<string, SectionConfig>;
 
 interface SidebarProps {
   activeSection: SidebarSection;
@@ -88,39 +78,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { t } = useTranslation();
   const { settings } = useSettings();
 
-  const availableSections = Object.entries(SECTIONS_CONFIG)
-    .filter(([_, config]) => config.enabled(settings))
+  const navSections = Object.entries(SECTIONS_CONFIG)
+    .filter(([_, config]) => config.visibleInNav && config.enabled(settings))
     .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
 
   return (
-    <div className="flex flex-col w-40 h-full border-e border-border-color items-center px-2">
-      <MomentumainlLogo width={120} className="m-4" />
-      <div className="flex flex-col w-full items-center gap-1 pt-2 border-t border-border-color">
-        {availableSections.map((section) => {
-          const Icon = section.icon;
+    <div
+      className="flex flex-col h-full border-e border-border-color bg-white"
+      style={{ width: 200, minWidth: 200 }}
+    >
+      <div className="px-5 py-5 border-b border-border-color">
+        <MomentumainlLogo width={110} />
+      </div>
+      <nav className="flex flex-col gap-0.5 px-3 pt-4">
+        {navSections.map((section) => {
           const isActive = activeSection === section.id;
-
           return (
-            <div
+            <button
               key={section.id}
-              className={`flex gap-2 items-center p-2 w-full rounded-lg cursor-pointer transition-colors ${
-                isActive
-                  ? "bg-accent text-white"
-                  : "hover:bg-border-color hover:opacity-100 opacity-85"
-              }`}
               onClick={() => onSectionChange(section.id)}
+              className={`flex items-center gap-2.5 w-full text-start px-3 py-2 rounded-md cursor-pointer transition-colors ${
+                isActive
+                  ? "bg-warm-grey text-near-black font-semibold"
+                  : "text-dark-grey font-normal hover:bg-warm-grey/60"
+              }`}
             >
-              <Icon width={24} height={24} className="shrink-0" />
-              <p
-                className="text-sm font-medium truncate"
-                title={t(section.labelKey)}
-              >
-                {t(section.labelKey)}
-              </p>
-            </div>
+              {isActive && (
+                <span
+                  className="shrink-0 rounded-full"
+                  style={{
+                    width: 6,
+                    height: 6,
+                    background: "#1A3D2B",
+                  }}
+                />
+              )}
+              {!isActive && <span style={{ width: 6, height: 6, flexShrink: 0 }} />}
+              <span className="text-sm truncate">{t(section.labelKey)}</span>
+            </button>
           );
         })}
-      </div>
+      </nav>
     </div>
   );
 };

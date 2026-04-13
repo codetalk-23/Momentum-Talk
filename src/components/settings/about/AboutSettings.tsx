@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getVersion } from "@tauri-apps/api/app";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { SettingsGroup } from "../../ui/SettingsGroup";
-import { SettingContainer } from "../../ui/SettingContainer";
-import { Button } from "../../ui/Button";
-import { AppDataDirectory } from "../AppDataDirectory";
-import { AppLanguageSelector } from "../AppLanguageSelector";
-import { LogDirectory } from "../debug";
 
 export const AboutSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -20,73 +14,38 @@ export const AboutSettings: React.FC = () => {
         setVersion(appVersion);
       } catch (error) {
         console.error("Failed to get app version:", error);
-        setVersion("0.1.2");
+        setVersion("—");
       }
     };
-
     fetchVersion();
   }, []);
-
-  const handleDonateClick = async () => {
-    try {
-      await openUrl("https://Momentum.computer/donate");
-    } catch (error) {
-      console.error("Failed to open donate link:", error);
-    }
-  };
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
       <SettingsGroup title={t("settings.about.title")}>
-        <AppLanguageSelector descriptionMode="tooltip" grouped={true} />
-        <SettingContainer
-          title={t("settings.about.version.title")}
-          description={t("settings.about.version.description")}
-          grouped={true}
+        <div
+          className="flex items-center justify-between"
+          style={{ padding: "14px 18px" }}
         >
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <span className="text-sm font-mono">v{version}</span>
-        </SettingContainer>
-
-        <SettingContainer
-          title={t("settings.about.supportDevelopment.title")}
-          description={t("settings.about.supportDevelopment.description")}
-          grouped={true}
-        >
-          <Button variant="primary" size="md" onClick={handleDonateClick}>
-            {t("settings.about.supportDevelopment.button")}
-          </Button>
-        </SettingContainer>
-
-        <SettingContainer
-          title={t("settings.about.sourceCode.title")}
-          description={t("settings.about.sourceCode.description")}
-          grouped={true}
-        >
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => openUrl("https://github.com/cjpais/Momentum")}
+          <span className="text-sm font-medium text-near-black">
+            {/* eslint-disable-next-line i18next/no-literal-string */}
+            Momentum Talk
+          </span>
+          <span
+            className="text-sm font-medium text-dark-grey"
+            style={{
+              background: "#F5F4F0",
+              border: "1px solid #E8E8E8",
+              borderRadius: 5,
+              padding: "4px 10px",
+              fontSize: 12,
+              fontWeight: 600,
+            }}
           >
-            {t("settings.about.sourceCode.button")}
-          </Button>
-        </SettingContainer>
-
-        <AppDataDirectory descriptionMode="tooltip" grouped={true} />
-        <LogDirectory grouped={true} />
-      </SettingsGroup>
-
-      <SettingsGroup title={t("settings.about.acknowledgments.title")}>
-        <SettingContainer
-          title={t("settings.about.acknowledgments.whisper.title")}
-          description={t("settings.about.acknowledgments.whisper.description")}
-          grouped={true}
-          layout="stacked"
-        >
-          <div className="text-sm text-dark-grey">
-            {t("settings.about.acknowledgments.whisper.details")}
-          </div>
-        </SettingContainer>
+            {/* eslint-disable-next-line i18next/no-literal-string */}
+            v{version}
+          </span>
+        </div>
       </SettingsGroup>
     </div>
   );

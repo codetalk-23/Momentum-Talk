@@ -99,9 +99,16 @@ export const useModelStore = create<ModelsStore>()(
               });
 
               // Remove models that backend says are NOT downloading AND
-              // frontend doesn't have progress for (completed/cancelled)
+              // frontend has no local progress/verify/extract state for.
+              // The extra checks guard against the startup race window where
+              // the backend hasn't propagated is_downloading=true yet.
               Object.keys(state.downloadingModels).forEach((id) => {
-                if (!backendDownloading[id] && !state.downloadProgress[id]) {
+                if (
+                  !backendDownloading[id] &&
+                  !state.downloadProgress[id] &&
+                  !state.verifyingModels[id] &&
+                  !state.extractingModels[id]
+                ) {
                   delete state.downloadingModels[id];
                 }
               });

@@ -45,6 +45,31 @@ export const Slider: React.FC<SliderProps> = ({
     >
       <div className="w-full">
         <div className="flex items-center space-x-1 h-6">
+          <style>{`
+            input[type=range].mt-slider {
+              -webkit-appearance: none;
+              appearance: none;
+              height: 3px;
+              border-radius: 2px;
+              outline: none;
+              cursor: pointer;
+            }
+            input[type=range].mt-slider::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              width: 0;
+              height: 0;
+            }
+            input[type=range].mt-slider::-moz-range-thumb {
+              width: 0;
+              height: 0;
+              border: none;
+            }
+            input[type=range].mt-slider:disabled {
+              opacity: 0.5;
+              cursor: not-allowed;
+            }
+          `}</style>
           <input
             type="range"
             min={min}
@@ -53,11 +78,11 @@ export const Slider: React.FC<SliderProps> = ({
             value={value}
             onChange={handleChange}
             disabled={disabled}
-            className="flex-grow h-2 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-slider flex-grow"
             style={{
-              background: `linear-gradient(to right, var(--color-accent) ${
+              background: `linear-gradient(to right, #1A3D2B ${
                 ((value - min) / (max - min)) * 100
-              }%, var(--color-border-color) ${
+              }%, #E8E8E8 ${
                 ((value - min) / (max - min)) * 100
               }%)`,
             }}

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { toast, Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
@@ -10,7 +10,6 @@ import {
 import { ModelStateEvent, RecordingErrorEvent } from "./lib/types/events";
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
-import Footer from "./components/footer";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
 import { useSettings } from "./hooks/useSettings";
@@ -229,10 +228,10 @@ function App() {
     setOnboardingStep(isReturningUser ? "done" : "model");
   };
 
-  const handleModelSelected = () => {
+  const handleModelSelected = useCallback(() => {
     // Transition to main app - user has started a download
     setOnboardingStep("done");
-  };
+  }, []);
 
   // Still checking onboarding status
   if (onboardingStep === null) {
@@ -271,17 +270,15 @@ function App() {
           onSectionChange={setCurrentSection}
         />
         {/* Scrollable content area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden bg-warm-grey">
           <div className="flex-1 overflow-y-auto">
-            <div className="flex flex-col items-center p-4 gap-4">
+            <div className="flex flex-col items-center gap-4" style={{ padding: 28 }}>
               <AccessibilityPermissions />
               {renderSettingsContent(currentSection)}
             </div>
           </div>
         </div>
       </div>
-      {/* Fixed footer at bottom */}
-      <Footer />
     </div>
   );
 }
