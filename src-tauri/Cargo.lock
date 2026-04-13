@@ -9,6 +9,67 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fe438c63458706e03479442743baae6c88256498e6431708f6dfc520a26515d3"
 
 [[package]]
+name = "Momentum"
+version = "0.8.2"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "cpal",
+ "enigo",
+ "env_filter",
+ "ferrous-opencc",
+ "flate2",
+ "futures-util",
+ "gtk",
+ "gtk-layer-shell",
+ "handy-keys",
+ "hound",
+ "log",
+ "natural",
+ "once_cell",
+ "rdev 0.5.0-2",
+ "regex",
+ "reqwest 0.12.28",
+ "rodio",
+ "rubato",
+ "rusqlite",
+ "rusqlite_migration",
+ "rustfft",
+ "serde",
+ "serde_json",
+ "sha2",
+ "signal-hook",
+ "specta",
+ "specta-typescript",
+ "strsim",
+ "tar",
+ "tauri",
+ "tauri-build",
+ "tauri-nspanel",
+ "tauri-plugin-autostart",
+ "tauri-plugin-clipboard-manager",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-global-shortcut",
+ "tauri-plugin-log",
+ "tauri-plugin-macos-permissions",
+ "tauri-plugin-opener",
+ "tauri-plugin-os",
+ "tauri-plugin-process",
+ "tauri-plugin-single-instance",
+ "tauri-plugin-store",
+ "tauri-plugin-updater",
+ "tauri-specta",
+ "tempfile",
+ "tokio",
+ "transcribe-rs",
+ "vad-rs",
+ "windows 0.61.3",
+ "winreg 0.55.0",
+]
+
+[[package]]
 name = "adler2"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2409,67 +2470,6 @@ dependencies = [
  "cfg-if",
  "crunchy",
  "zerocopy",
-]
-
-[[package]]
-name = "handy"
-version = "0.8.2"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "cpal",
- "enigo",
- "env_filter",
- "ferrous-opencc",
- "flate2",
- "futures-util",
- "gtk",
- "gtk-layer-shell",
- "handy-keys",
- "hound",
- "log",
- "natural",
- "once_cell",
- "rdev 0.5.0-2",
- "regex",
- "reqwest 0.12.28",
- "rodio",
- "rubato",
- "rusqlite",
- "rusqlite_migration",
- "rustfft",
- "serde",
- "serde_json",
- "sha2",
- "signal-hook",
- "specta",
- "specta-typescript",
- "strsim",
- "tar",
- "tauri",
- "tauri-build",
- "tauri-nspanel",
- "tauri-plugin-autostart",
- "tauri-plugin-clipboard-manager",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-global-shortcut",
- "tauri-plugin-log",
- "tauri-plugin-macos-permissions",
- "tauri-plugin-opener",
- "tauri-plugin-os",
- "tauri-plugin-process",
- "tauri-plugin-single-instance",
- "tauri-plugin-store",
- "tauri-plugin-updater",
- "tauri-specta",
- "tempfile",
- "tokio",
- "transcribe-rs",
- "vad-rs",
- "windows 0.61.3",
- "winreg 0.55.0",
 ]
 
 [[package]]
@@ -6491,7 +6491,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime"
 version = "2.10.0"
-source = "git+https://github.com/cjpais/tauri.git?branch=handy-2.10.2#ad9ba9448b82b1a1628333ae06459e4def470db3"
+source = "git+https://github.com/cjpais/tauri.git?branch=Momentum-2.10.2#ad9ba9448b82b1a1628333ae06459e4def470db3"
 dependencies = [
  "cookie",
  "dpi",
@@ -6515,7 +6515,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime-wry"
 version = "2.10.0"
-source = "git+https://github.com/cjpais/tauri.git?branch=handy-2.10.2#ad9ba9448b82b1a1628333ae06459e4def470db3"
+source = "git+https://github.com/cjpais/tauri.git?branch=Momentum-2.10.2#ad9ba9448b82b1a1628333ae06459e4def470db3"
 dependencies = [
  "gtk",
  "http",
@@ -6569,7 +6569,7 @@ dependencies = [
 [[package]]
 name = "tauri-utils"
 version = "2.8.2"
-source = "git+https://github.com/cjpais/tauri.git?branch=handy-2.10.2#ad9ba9448b82b1a1628333ae06459e4def470db3"
+source = "git+https://github.com/cjpais/tauri.git?branch=Momentum-2.10.2#ad9ba9448b82b1a1628333ae06459e4def470db3"
 dependencies = [
  "anyhow",
  "brotli",

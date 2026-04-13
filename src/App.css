@@ -1,28 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  /* Design tokens */
-  --color-text: #0f0f0f;
-  --color-background: #fbfbfb;
-  --color-background-ui: #da5893;
-  --color-logo-primary: #faa2ca;
-  --color-logo-stroke: #382731;
-  --color-text-stroke: #f6f6f6;
-  --color-mid-gray: #808080;
+  /* Momentum Brand Design Tokens */
+  --color-forest: #1A3D2B;
+  --color-forest-mid: #2D6A4F;
+  --color-forest-light: #52b788;
+  --color-near-black: #0A0A0A;
+  --color-white: #FFFFFF;
+  --color-warm-grey: #F5F4F0;
+  --color-border: #E8E8E8;
+  --color-dark-grey: #888888;
 }
 
 :root {
   /* Typography */
-  font-size: 15px;
+  font-size: 14px;
+  font-family: "Calibri", "Trebuchet MS", sans-serif;
   line-height: 24px;
   font-weight: 400;
 
-  /* Colors - Light Theme */
-  /* --color-text: #0f0f0f;
-  --color-background: #fbfbfb;
-  --color-logo-primary: #FAA2CA;
-  --color-logo-stroke: #382731;
-  --color-text-stroke: #f6f6f6; */
+  /* Colors - Light Theme (Momentum Brand) */
+  --color-text: #0A0A0A;
+  --color-background: #FFFFFF;
+  --color-background-secondary: #F5F4F0;
+  --color-accent: #1A3D2B;
+  --color-accent-secondary: #2D6A4F;
+  --color-mid-gray: #888888;
+  --color-border-color: #E8E8E8;
 
   /* Typography settings */
   font-synthesis: none;
@@ -31,11 +35,11 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --scrollbar-thumb: color-mix(in srgb, var(--color-text), transparent 85%);
+  --scrollbar-thumb: color-mix(in srgb, var(--color-text), transparent 80%);
   --scrollbar-thumb-hover: color-mix(
     in srgb,
     var(--color-text),
-    transparent 70%
+    transparent 65%
   );
 
   /* Apply colors */
@@ -54,11 +58,10 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Colors - Dark Theme */
-    --color-text: #fbfbfb;
-    --color-background: #2c2b29;
-    --color-logo-primary: #f28cbb;
-    --color-logo-stroke: #fad1ed;
+    /* Dark theme - maintain light backgrounds per brand guide */
+    --color-text: #0A0A0A;
+    --color-background: #FFFFFF;
+    --color-background-secondary: #F5F4F0;
   }
 }
 
@@ -93,16 +96,16 @@
 
 @layer utilities {
   .text-stroke {
-    -webkit-text-stroke: 2px var(--color-text-stroke);
+    -webkit-text-stroke: 2px var(--color-background);
   }
 }
 
 .logo-primary {
-  fill: var(--color-logo-primary);
+  fill: var(--color-forest);
 }
 
 .logo-stroke {
-  fill: var(--color-logo-stroke);
-  stroke: var(--color-logo-stroke);
+  fill: var(--color-near-black);
+  stroke: var(--color-near-black);
   stroke-width: 1;
 }

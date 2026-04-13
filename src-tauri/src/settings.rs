@@ -333,7 +333,7 @@ impl std::ops::DerefMut for SecretMap {
     }
 }
 
-/* still handy for composing the initial JSON in the store ------------- */
+/* still Momentum for composing the initial JSON in the store ------------- */
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct AppSettings {
     pub bindings: HashMap<String, ShortcutBinding>,

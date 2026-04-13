@@ -29,7 +29,7 @@ export const AboutSettings: React.FC = () => {
 
   const handleDonateClick = async () => {
     try {
-      await openUrl("https://handy.computer/donate");
+      await openUrl("https://Momentum.computer/donate");
     } catch (error) {
       console.error("Failed to open donate link:", error);
     }
@@ -66,7 +66,7 @@ export const AboutSettings: React.FC = () => {
           <Button
             variant="secondary"
             size="md"
-            onClick={() => openUrl("https://github.com/cjpais/Handy")}
+            onClick={() => openUrl("https://github.com/cjpais/Momentum")}
           >
             {t("settings.about.sourceCode.button")}
           </Button>
@@ -83,7 +83,7 @@ export const AboutSettings: React.FC = () => {
           grouped={true}
           layout="stacked"
         >
-          <div className="text-sm text-mid-gray">
+          <div className="text-sm text-dark-grey">
             {t("settings.about.acknowledgments.whisper.details")}
           </div>
         </SettingContainer>

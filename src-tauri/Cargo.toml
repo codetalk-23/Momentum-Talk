@@ -1,11 +1,11 @@
 [package]
-name = "handy"
+name = "Momentum"
 version = "0.8.2"
-description = "Handy"
+description = "Momentum"
 authors = ["cjpais"]
 edition = "2021"
 license = "MIT"
-default-run = "handy"
+default-run = "Momentum"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.
@@ -108,9 +108,9 @@ gtk = "0.18"
 transcribe-rs = { version = "0.3.3", features = ["whisper-vulkan"] }
 
 [patch.crates-io]
-tauri-runtime = { git = "https://github.com/cjpais/tauri.git", branch = "handy-2.10.2" }
-tauri-runtime-wry = { git = "https://github.com/cjpais/tauri.git", branch = "handy-2.10.2" }
-tauri-utils = { git = "https://github.com/cjpais/tauri.git", branch = "handy-2.10.2" }
+tauri-runtime = { git = "https://github.com/cjpais/tauri.git", branch = "Momentum-2.10.2" }
+tauri-runtime-wry = { git = "https://github.com/cjpais/tauri.git", branch = "Momentum-2.10.2" }
+tauri-utils = { git = "https://github.com/cjpais/tauri.git", branch = "Momentum-2.10.2" }
 
 [dev-dependencies]
 tempfile = "3"

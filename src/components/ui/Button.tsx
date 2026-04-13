@@ -23,17 +23,17 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variantClasses = {
     primary:
-      "text-white bg-background-ui border-background-ui hover:bg-background-ui/80 hover:border-background-ui/80 focus:ring-1 focus:ring-background-ui",
+      "text-white bg-accent border-accent hover:bg-accent-secondary hover:border-accent-secondary focus:ring-1 focus:ring-accent",
     "primary-soft":
-      "text-text bg-logo-primary/20 border-transparent hover:bg-logo-primary/30 focus:ring-1 focus:ring-logo-primary",
+      "text-text bg-accent/10 border-accent/20 hover:bg-accent/15 focus:ring-1 focus:ring-accent/30",
     secondary:
-      "bg-mid-gray/10 border-mid-gray/20 hover:bg-background-ui/30 hover:border-logo-primary focus:outline-none",
+      "bg-border-color border-border-color text-text hover:bg-background-secondary hover:border-border-color focus:outline-none",
     danger:
-      "text-white bg-red-600 border-mid-gray/20 hover:bg-red-700 hover:border-red-700 focus:ring-1 focus:ring-red-500",
+      "text-white bg-red-600 border-red-600 hover:bg-red-700 hover:border-red-700 focus:ring-1 focus:ring-red-500",
     "danger-ghost":
-      "text-red-400 border-transparent hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/20",
+      "text-red-600 border-transparent hover:text-red-700 hover:bg-red-50 focus:bg-red-100",
     ghost:
-      "text-current border-transparent hover:bg-mid-gray/10 hover:border-logo-primary focus:bg-mid-gray/20",
+      "text-text border-border-color hover:bg-border-color/40 hover:border-border-color focus:bg-border-color/60",
   };
 
   const sizeClasses = {
