@@ -270,7 +270,7 @@ function App() {
           onSectionChange={setCurrentSection}
         />
         {/* Scrollable content area */}
-        <div className="flex-1 flex flex-col overflow-hidden bg-warm-grey">
+        <div className="flex-1 flex flex-col overflow-hidden bg-background">
           <div className="flex-1 overflow-y-auto">
             <div className="flex flex-col items-center gap-4" style={{ padding: 28 }}>
               <AccessibilityPermissions />

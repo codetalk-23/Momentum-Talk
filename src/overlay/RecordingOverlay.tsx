@@ -1,11 +1,5 @@
 import { listen } from "@tauri-apps/api/event";
 import React, { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import {
-  MicrophoneIcon,
-  TranscriptionIcon,
-  CancelIcon,
-} from "../components/icons";
 import "./RecordingOverlay.css";
 import { commands } from "@/bindings";
 import i18n, { syncLanguageFromSettings } from "@/i18n";
@@ -13,45 +7,79 @@ import { getLanguageDirection } from "@/lib/utils/rtl";
 
 type OverlayState = "recording" | "transcribing" | "processing";
 
+const BAR_COUNT = 11;
+
 const RecordingOverlay: React.FC = () => {
-  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [state, setState] = useState<OverlayState>("recording");
-  const [levels, setLevels] = useState<number[]>(Array(16).fill(0));
-  const smoothedLevelsRef = useRef<number[]>(Array(16).fill(0));
+  const [levels, setLevels] = useState<number[]>(Array(BAR_COUNT).fill(0));
+  const smoothedLevelsRef = useRef<number[]>(Array(BAR_COUNT).fill(0));
+  const energyRef = useRef<number>(0.4); // smoothed volume energy from mic
+  const idleAnimRef = useRef<number | null>(null);
+  const phaseRef = useRef<number[]>(
+    Array(BAR_COUNT).fill(0).map((_, i) => i * 0.65),
+  );
   const direction = getLanguageDirection(i18n.language);
 
   useEffect(() => {
+    const tick = () => {
+      if (state === "recording" && isVisible) {
+        const t = Date.now() / 1000;
+        const energy = energyRef.current;
+
+        const animated = Array(BAR_COUNT).fill(0).map((_, i) => {
+          phaseRef.current[i] += 0.035 + i * 0.004;
+          const phase = phaseRef.current[i];
+
+          // Natural wave: sum of sines at different frequencies per bar
+          const wave =
+            Math.sin(t * 2.8 + phase) * 0.45 +
+            Math.sin(t * 5.2 + phase * 1.4) * 0.3 +
+            Math.sin(t * 1.9 + i * 1.1) * 0.25;
+
+          // Normalize 0–1, scale by energy so quiet = gentle idle, loud = big waves
+          const normalized = (wave + 1) / 2;
+          const target = Math.max(0.08, normalized * energy);
+
+          smoothedLevelsRef.current[i] =
+            smoothedLevelsRef.current[i] * 0.6 + target * 0.4;
+          return smoothedLevelsRef.current[i];
+        });
+
+        setLevels([...animated]);
+      }
+      idleAnimRef.current = requestAnimationFrame(tick);
+    };
+
+    idleAnimRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
+    };
+  }, [state, isVisible]);
+
+  useEffect(() => {
     const setupEventListeners = async () => {
-      // Listen for show-overlay event from Rust
       const unlistenShow = await listen("show-overlay", async (event) => {
-        // Sync language from settings each time overlay is shown
         await syncLanguageFromSettings();
-        const overlayState = event.payload as OverlayState;
-        setState(overlayState);
+        setState(event.payload as OverlayState);
         setIsVisible(true);
       });
 
-      // Listen for hide-overlay event from Rust
       const unlistenHide = await listen("hide-overlay", () => {
         setIsVisible(false);
       });
 
-      // Listen for mic-level updates
       const unlistenLevel = await listen<number[]>("mic-level", (event) => {
         const newLevels = event.payload as number[];
-
-        // Apply smoothing to reduce jitter
-        const smoothed = smoothedLevelsRef.current.map((prev, i) => {
-          const target = newLevels[i] || 0;
-          return prev * 0.7 + target * 0.3; // Smooth transition
-        });
-
-        smoothedLevelsRef.current = smoothed;
-        setLevels(smoothed.slice(0, 9));
+        // Compute RMS-like energy from all incoming values
+        const sum = newLevels.reduce((a, b) => a + Math.abs(b), 0);
+        const raw = newLevels.length > 0 ? sum / newLevels.length : 0;
+        // Amplify moderately and clamp — quiet voice ~0.02 becomes ~0.4
+        const amplified = Math.min(1, raw * 20);
+        // Smooth energy so it doesn't jump around
+        energyRef.current = energyRef.current * 0.7 + amplified * 0.3;
       });
 
-      // Cleanup function
       return () => {
         unlistenShow();
         unlistenHide();
@@ -62,57 +90,42 @@ const RecordingOverlay: React.FC = () => {
     setupEventListeners();
   }, []);
 
-  const getIcon = () => {
-    if (state === "recording") {
-      return <MicrophoneIcon />;
-    } else {
-      return <TranscriptionIcon />;
-    }
-  };
-
   return (
     <div
       dir={direction}
       className={`recording-overlay ${isVisible ? "fade-in" : ""}`}
     >
-      <div className="overlay-left">{getIcon()}</div>
-
-      <div className="overlay-middle">
-        {state === "recording" && (
+      {state === "recording" && (
+        <div className="overlay-pill">
           <div className="bars-container">
             {levels.map((v, i) => (
               <div
                 key={i}
                 className="bar"
                 style={{
-                  height: `${Math.min(20, 4 + Math.pow(v, 0.7) * 16)}px`, // Cap at 20px max height
-                  transition: "height 60ms ease-out, opacity 120ms ease-out",
-                  opacity: Math.max(0.2, v * 1.7), // Minimum opacity for visibility
+                  height: `${4 + v * 24}px`,
+                  opacity: 0.25 + v * 0.75,
                 }}
               />
             ))}
           </div>
-        )}
-        {state === "transcribing" && (
-          <div className="transcribing-text">{t("overlay.transcribing")}</div>
-        )}
-        {state === "processing" && (
-          <div className="transcribing-text">{t("overlay.processing")}</div>
-        )}
-      </div>
-
-      <div className="overlay-right">
-        {state === "recording" && (
           <div
             className="cancel-button"
-            onClick={() => {
+            onMouseDown={(e) => {
+              e.preventDefault();
               commands.cancelOperation();
             }}
-          >
-            <CancelIcon />
+          />
+        </div>
+      )}
+
+      {(state === "transcribing" || state === "processing") && (
+        <div className="overlay-pill">
+          <div className="transcribing-dots">
+            <span /><span /><span />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

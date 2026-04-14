@@ -1,95 +1,93 @@
 .recording-overlay {
-  height: 36px;
-  width: 172px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  position: fixed;
+  inset: 0;
+  display: flex;
   align-items: center;
-  padding: 6px;
-  background: rgba(10, 10, 10, 0.88);
-  border-radius: 18px;
+  justify-content: center;
   opacity: 0;
-  transition: opacity 300ms ease-out;
-  box-sizing: border-box;
-}
-
-.overlay-left {
-  display: flex;
-  align-items: center;
-}
-
-.overlay-middle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.overlay-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.bars-container {
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  gap: 3px;
-  padding-bottom: 0px;
-  height: 24px;
-  overflow: hidden;
-}
-
-.bar {
-  width: 6px;
-  background: #52b788;
-  max-height: 20px;
-  border-radius: 2px;
-  transition: height 80ms linear;
-  min-height: 4px;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
 
 .recording-overlay.fade-in {
   opacity: 1;
+  pointer-events: all;
 }
 
-.transcribing-text {
-  color: white;
-  font-size: 12px;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  animation: transcribing-pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes transcribing-pulse {
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-.cancel-button {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: transparent;
+.overlay-pill {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 3px;
+  background: rgba(58, 58, 60, 0.88);
+  border: 0.5px solid rgba(255, 255, 255, 0.09);
+  border-radius: 100px;
+  padding: 12px 20px;
+  height: 48px;
+  box-sizing: border-box;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+/* bars */
+.bars-container {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 32px;
+}
+
+.bar {
+  width: 3px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.85);
+  transition: height 0.08s ease, opacity 0.08s ease;
+}
+
+/* cancel - subtle X rechts van de bars */
+.cancel-button {
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
   cursor: pointer;
-  transition:
-    background-color 150ms ease-out,
-    transform 100ms ease-out;
+  position: relative;
   flex-shrink: 0;
 }
 
-.cancel-button:hover {
-  background: rgba(82, 183, 136, 0.2);
-  transform: scale(1.05);
+.cancel-button::before,
+.cancel-button::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 7px; height: 1.5px;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 2px;
 }
 
-.cancel-button:active {
-  transform: scale(0.95);
+.cancel-button::before { transform: translate(-50%, -50%) rotate(45deg); }
+.cancel-button::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+
+/* dots */
+.transcribing-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.transcribing-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  animation: dot-pulse 1.2s ease-in-out infinite;
+}
+
+.transcribing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.transcribing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.85); }
+  50%       { opacity: 1;    transform: scale(1);    }
 }

@@ -2,31 +2,39 @@
 
 @theme {
   /* Momentum Brand Design Tokens */
-  --color-forest: #1A3D2B;
+  --color-forest: #2D6A4F;
   --color-forest-mid: #2D6A4F;
-  --color-forest-light: #52b788;
-  --color-near-black: #0A0A0A;
+  --color-forest-light: #86EFAC;
+  --color-near-black: #1C1C1E;
   --color-white: #FFFFFF;
-  --color-warm-grey: #F5F4F0;
-  --color-border: #E8E8E8;
-  --color-dark-grey: #888888;
+  --color-warm-grey: #F2F2F7;
+  --color-border: #E5E5EA;
+  --color-dark-grey: #8E8E93;
+
+  /* Semantic Aliases - used by components (must be in @theme for Tailwind v4) */
+  --color-text: #1C1C1E;
+  --color-background: #FFFFFF;
+  --color-background-secondary: #F2F2F7;
+  --color-accent: #2D6A4F;
+  --color-accent-secondary: #2D6A4F;
+  --color-border-color: #E5E5EA;
 }
 
 :root {
   /* Typography */
   font-size: 14px;
-  font-family: "Calibri", "Trebuchet MS", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
   line-height: 24px;
   font-weight: 400;
 
-  /* Colors - Light Theme (Momentum Brand) */
-  --color-text: #0A0A0A;
+  /* Colors - Light Theme (Apple-inspired) */
+  --color-text: #1C1C1E;
   --color-background: #FFFFFF;
-  --color-background-secondary: #F5F4F0;
-  --color-accent: #1A3D2B;
+  --color-background-secondary: #F2F2F7;
+  --color-accent: #2D6A4F;
   --color-accent-secondary: #2D6A4F;
-  --color-mid-gray: #888888;
-  --color-border-color: #E8E8E8;
+  --color-mid-gray: #8E8E93;
+  --color-border-color: #E5E5EA;
 
   /* Typography settings */
   font-synthesis: none;
@@ -59,9 +67,9 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Dark theme - maintain light backgrounds per brand guide */
-    --color-text: #0A0A0A;
+    --color-text: #1C1C1E;
     --color-background: #FFFFFF;
-    --color-background-secondary: #F5F4F0;
+    --color-background-secondary: #F2F2F7;
   }
 }
 

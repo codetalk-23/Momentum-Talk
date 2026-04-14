@@ -43,7 +43,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           width: 36,
           height: 20,
           borderRadius: 10,
-          background: checked ? "#1A3D2B" : "#E8E8E8",
+          background: checked ? "#2D6A4F" : "#E5E5EA",
           boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
           transition: "background 0.2s",
         }}

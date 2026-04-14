@@ -109,7 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   style={{
                     width: 6,
                     height: 6,
-                    background: "#1A3D2B",
+                    background: "#2D6A4F",
                   }}
                 />
               )}

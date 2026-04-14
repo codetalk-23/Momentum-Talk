@@ -39,6 +39,7 @@ use std::sync::Arc;
 use tauri::image::Image;
 pub use transcription_coordinator::TranscriptionCoordinator;
 
+use tauri::menu::{Menu, MenuItem, Submenu};
 use tauri::tray::TrayIconBuilder;
 use tauri::{AppHandle, Emitter, Listener, Manager};
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
@@ -82,6 +83,12 @@ fn build_console_filter() -> env_filter::Filter {
     }
 
     builder.build()
+}
+
+fn build_app_menu(app: &tauri::App) -> tauri::Result<Menu<tauri::Wry>> {
+    let help_website = MenuItem::with_id(app, "help_website", "Visit Website", true, None::<&str>)?;
+    let help_menu = Submenu::with_items(app, "Help", true, &[&help_website])?;
+    Menu::with_items(app, &[&help_menu])
 }
 
 fn show_main_window(app: &AppHandle) {
@@ -441,6 +448,12 @@ pub fn run(cli_args: CliArgs) {
 
     #[allow(unused_mut)]
     let mut builder = tauri::Builder::default()
+        .on_menu_event(|app, event| {
+            if event.id() == "help_website" {
+                let _ = tauri_plugin_opener::open_url("https://www.momentumai.nl", None::<&str>);
+                let _ = app;
+            }
+        })
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .plugin(tauri_plugin_dialog::init())
         .plugin(
@@ -507,6 +520,10 @@ pub fn run(cli_args: CliArgs) {
         .manage(cli_args.clone())
         .setup(move |app| {
             specta_builder.mount_events(app);
+
+            if let Ok(menu) = build_app_menu(app) {
+                let _ = app.set_menu(menu);
+            }
 
             // Create main window programmatically so we can set data_directory
             // for portable mode (redirects WebView2 cache to portable Data dir)

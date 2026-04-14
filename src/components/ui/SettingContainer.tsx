@@ -23,14 +23,14 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
   const rowStyle = { padding: "14px 18px" };
 
   const containerClasses = grouped
-    ? ""
+    ? "hover:bg-warm-grey/30 transition-colors duration-150"
     : "rounded-lg border border-border-color bg-white";
 
   if (layout === "stacked") {
     return (
-      <div className={containerClasses} style={grouped ? rowStyle : { ...rowStyle, borderRadius: 8 }}>
+      <div className={containerClasses} style={grouped ? { ...rowStyle, borderRadius: 6 } : { ...rowStyle, borderRadius: 8 }}>
         <div className="mb-2">
-          <h3 className={`text-sm font-medium text-near-black ${disabled ? "opacity-50" : ""}`}>
+          <h3 className={`text-sm font-medium text-text ${disabled ? "opacity-50" : ""}`}>
             {title}
           </h3>
           {descriptionMode === "inline" && (
@@ -48,10 +48,10 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
   return (
     <div
       className={`flex items-center justify-between ${containerClasses}`}
-      style={grouped ? rowStyle : { ...rowStyle, borderRadius: 8 }}
+      style={grouped ? { ...rowStyle, borderRadius: 6 } : { ...rowStyle, borderRadius: 8 }}
     >
       <div className="max-w-2/3">
-        <h3 className={`text-sm font-medium text-near-black ${disabled ? "opacity-50" : ""}`}>
+        <h3 className={`text-sm font-medium text-text ${disabled ? "opacity-50" : ""}`}>
           {title}
         </h3>
         {descriptionMode === "inline" && (

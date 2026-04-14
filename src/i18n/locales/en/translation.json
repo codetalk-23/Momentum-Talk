@@ -608,5 +608,12 @@
   "overlay": {
     "transcribing": "Transcribing...",
     "processing": "Processing..."
+  },
+  "referral": {
+    "buttonLabel": "Share Momentum Talk",
+    "title": "Know someone who could use this?",
+    "description": "Here's a link to download Momentum Talk — the speech-to-text app that gets out of your way.",
+    "linkLabel": "Download Momentum Talk",
+    "close": "Close"
   }
 }

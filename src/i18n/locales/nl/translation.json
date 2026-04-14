@@ -1,0 +1,611 @@
+{
+  "tray": {
+    "settings": "Instellingen...",
+    "checkUpdates": "Controleer op updates...",
+    "copyLastTranscript": "Kopieer laatste transcript",
+    "unloadModel": "Model verwijderen",
+    "model": "Model",
+    "quit": "Afsluiten",
+    "cancel": "Annuleren"
+  },
+  "sidebar": {
+    "general": "Algemeen",
+    "models": "Modellen",
+    "advanced": "Geavanceerd",
+    "postProcessing": "Nabewerking",
+    "history": "Geschiedenis",
+    "debug": "Debug",
+    "about": "Over"
+  },
+  "onboarding": {
+    "subtitle": "Kies een transcriptiemodel om te beginnen",
+    "recommended": "Aanbevolen",
+    "download": "Download",
+    "downloading": "Downloaden...",
+    "customModelDescription": "Niet officieel ondersteund",
+    "downloadFailed": "Download mislukt. Probeer het opnieuw.",
+    "modelCard": {
+      "accuracy": "nauwkeurigheid",
+      "speed": "snelheid"
+    },
+    "models": {
+      "small": {
+        "name": "Whisper Klein",
+        "description": "Snel en redelijk nauwkeurig."
+      },
+      "medium": {
+        "name": "Whisper Gemiddeld",
+        "description": "Goede nauwkeurigheid, gemiddelde snelheid"
+      },
+      "turbo": {
+        "name": "Whisper Turbo",
+        "description": "Goed uitgebalanceerde nauwkeurigheid en snelheid."
+      },
+      "large": {
+        "name": "Whisper Groot",
+        "description": "Goede nauwkeurigheid, maar traag."
+      },
+      "parakeet-tdt-0.6b-v2": {
+        "name": "Parakeet V2",
+        "description": "Alleen Engels. Het beste model voor Engelssprekenden."
+      },
+      "parakeet-tdt-0.6b-v3": {
+        "name": "Parakeet V3",
+        "description": "Snel en nauwkeurig"
+      },
+      "moonshine-base": {
+        "name": "Moonshine Base",
+        "description": "Zeer snel, alleen Engels. Gaat goed om met accenten."
+      },
+      "moonshine-tiny-streaming-en": {
+        "name": "Moonshine V2 Tiny",
+        "description": "Ultra-snel, alleen Engels"
+      },
+      "moonshine-small-streaming-en": {
+        "name": "Moonshine V2 Klein",
+        "description": "Snel, alleen Engels. Goed evenwicht tussen snelheid en nauwkeurigheid."
+      },
+      "moonshine-medium-streaming-en": {
+        "name": "Moonshine V2 Gemiddeld",
+        "description": "Alleen Engels. Hoge kwaliteit."
+      },
+      "breeze-asr": {
+        "name": "Breeze ASR",
+        "description": "Geoptimaliseerd voor Taiwanese Mandarijn. Code-switching ondersteuning."
+      },
+      "sense-voice-int8": {
+        "name": "SenseVoice",
+        "description": "Zeer snel. Chinees, Engels, Japans, Koreaans, Kantonees."
+      },
+      "gigaam-v3-e2e-ctc": {
+        "name": "GigaAM v3",
+        "description": "Russische spraakherkenning. Snel en nauwkeurig."
+      },
+      "canary-180m-flash": {
+        "name": "Canary 180M Flash",
+        "description": "Zeer snel. Engels, Duits, Spaans, Frans. Ondersteunt vertaling."
+      },
+      "canary-1b-v2": {
+        "name": "Canary 1B v2",
+        "description": "Nauwkeurig meertalig. 25 Europese talen. Ondersteunt vertaling."
+      },
+      "cohere-int8": {
+        "name": "Cohere",
+        "description": "Een groot, langzamer maar zeer nauwkeurig meertalig model."
+      }
+    },
+    "errors": {
+      "loadModels": "Kan beschikbare modellen niet laden",
+      "downloadModel": "Kan model niet downloaden: {{error}}"
+    },
+    "permissions": {
+      "title": "Machtigingen vereist",
+      "description": "Momentum Talk heeft enkele machtigingen nodig om goed te werken.",
+      "microphone": {
+        "title": "Microfoontoegang",
+        "description": "Nodig om uw stem voor transcriptie te horen."
+      },
+      "accessibility": {
+        "title": "Toegankelijkheidstoegang",
+        "description": "Nodig om getranscribeerde tekst in uw applicaties in te typen."
+      },
+      "grant": "Machtiging verlenen",
+      "granted": "Verleend",
+      "waiting": "Wachten...",
+      "allGranted": "Alles ingesteld!",
+      "errors": {
+        "checkFailed": "Kan machtigingen niet controleren. Probeer het opnieuw.",
+        "requestFailed": "Kan machtiging niet aanvragen. Probeer het opnieuw."
+      }
+    }
+  },
+  "modelSelector": {
+    "custom": "Aangepast",
+    "active": "Actief",
+    "switching": "Wisselen...",
+    "noModelsAvailable": "Geen modellen beschikbaar",
+    "verifying": "Verificatie {{modelName}}...",
+    "verifyingGeneric": "Verificatie...",
+    "extracting": "{{modelName}} uitpakken...",
+    "extractingMultiple": "{{count}} modellen uitpakken...",
+    "extractingGeneric": "Uitpakken...",
+    "downloading": "Downloaden {{percentage}}%",
+    "downloadingMultiple": "{{count}} modellen downloaden...",
+    "modelReady": "Model gereed",
+    "loading": "{{modelName}} laden...",
+    "loadingGeneric": "Laden...",
+    "modelError": "Modelfout",
+    "modelUnloaded": "Model verwijderd",
+    "noModelDownloadRequired": "Geen model - Download vereist",
+    "deleteModel": "Verwijder {{modelName}}",
+    "downloadSpeed": "{{speed}} MB/s",
+    "cancel": "Annuleren",
+    "cancelDownload": "Download annuleren",
+    "capabilities": {
+      "languageSelection": "Ondersteunt meerdere invoertalen",
+      "singleLanguage": "Ondersteunt alleen deze taal",
+      "multiLanguage": "Meertalig",
+      "languageOnly": "Alleen {{language}}",
+      "translation": "Kan naar het Engels vertalen",
+      "translate": "Vertaal naar Engels"
+    }
+  },
+  "settings": {
+    "modelSettings": {
+      "title": "{{model}} instellingen",
+      "noSettingsNeeded": "Dit model werkt automatisch zonder configuratie."
+    },
+    "general": {
+      "title": "Algemeen",
+      "shortcut": {
+        "title": "Momentum Talk sneltoetsen",
+        "description": "Configureer toetscombinaties om spraak-naar-tekst opname te starten",
+        "loading": "Sneltoetsen laden...",
+        "none": "Geen sneltoetsen ingesteld",
+        "notFound": "Sneltoets niet gevonden",
+        "pressKeys": "Druk op toetsen...",
+        "bindings": {
+          "transcribe": {
+            "name": "Transcriptie sneltoets",
+            "description": "De toetscombinatie om uw stem op te nemen en te transcriberen."
+          },
+          "cancel": {
+            "name": "Sneltoets annuleren",
+            "description": "De toetscombinatie om de huidige opname te annuleren."
+          },
+          "transcribe_with_post_process": {
+            "name": "Post-processing toets",
+            "description": "Optioneel: Een speciale toets die altijd AI-nabewerking op uw transcriptie toepast."
+          }
+        },
+        "errors": {
+          "restore": "Kan originele sneltoets niet herstellen",
+          "set": "Kan sneltoets niet instellen: {{error}}",
+          "reset": "Kan sneltoets niet resetten naar oorspronkelijke waarde"
+        }
+      },
+      "language": {
+        "title": "Taal",
+        "description": "Selecteer de taal voor spraakherkenning. Auto zal automatisch de taal bepalen, terwijl het selecteren van een specifieke taal de nauwkeurigheid voor die taal kan verbeteren.",
+        "descriptionUnsupported": "Parakeet model detecteert automatisch de taal. Geen handmatige selectie nodig.",
+        "searchPlaceholder": "Zoek talen...",
+        "noResults": "Geen talen gevonden",
+        "auto": "Auto"
+      },
+      "pushToTalk": {
+        "label": "Push To Talk",
+        "description": "Ingedrukt houden om op te nemen, loslaten om te stoppen"
+      }
+    },
+    "models": {
+      "title": "Transcriptiemodellen",
+      "description": "Selecteer een transcriptiemodel of download aanvullende modellen. Verschillende modellen bieden verschillende niveaus van nauwkeurigheid en snelheid.",
+      "yourModels": "Gedownloade modellen",
+      "availableModels": "Beschikbaar om te downloaden",
+      "downloaded": "Gedownload",
+      "available": "Beschikbaar om te downloaden",
+      "deleteConfirm": "Weet u zeker dat u {{modelName}} wilt verwijderen? U moet het opnieuw downloaden om het te gebruiken.",
+      "deleteActiveConfirm": "{{modelName}} is uw actieve model. Als u het verwijdert, worden transcripties gestopt totdat u een nieuw model selecteert. Weet u het zeker?",
+      "deleteTitle": "Model verwijderen",
+      "filters": {
+        "all": "Alle",
+        "multiLanguage": "Meertalig",
+        "translation": "Vertaling",
+        "allLanguages": "Alle talen"
+      },
+      "noModelsMatch": "Geen modellen voldoen aan dit filter."
+    },
+    "sound": {
+      "title": "Geluid",
+      "microphone": {
+        "title": "Microfoon",
+        "description": "Selecteer uw voorkeursmicrofooonapparaat",
+        "placeholder": "Selecteer microfoon...",
+        "loading": "Laden..."
+      },
+      "audioFeedback": {
+        "label": "Audiofeedback",
+        "description": "Speel geluid af wanneer opname begint en stopt"
+      },
+      "outputDevice": {
+        "title": "Uitvoerapparaat",
+        "description": "Selecteer uw voorkeursfeedback geluidapparaat",
+        "placeholder": "Selecteer uitvoerapparaat...",
+        "loading": "Laden..."
+      },
+      "volume": {
+        "title": "Volume",
+        "description": "Pas het volume van audiofeedbackgeluiden aan"
+      }
+    },
+    "advanced": {
+      "title": "Geavanceerd",
+      "groups": {
+        "app": "App",
+        "output": "Uitvoer",
+        "transcription": "Transcriptie",
+        "history": "Geschiedenis",
+        "experimental": "Experimenteel"
+      },
+      "experimentalToggle": {
+        "label": "Experimentele functies",
+        "description": "Schakel experimentele functies in die nog in ontwikkeling zijn."
+      },
+      "lazyStreamClose": {
+        "label": "Microfoon tussen transcripties open houden",
+        "description": "Houdt de microfoonstream 30 seconden na het stoppen van opname open, wat de latentie voor achtereenvolgend transcripties vermindert. Kan de Bluetooth-audiokwaliteit verminderen."
+      },
+      "acceleration": {
+        "whisper": {
+          "title": "Whisper versnelling",
+          "description": "Hardwareversnelling voor Whisper modellen. Auto gebruikt GPU indien beschikbaar (Metal op macOS, Vulkan op Windows/Linux)."
+        },
+        "ort": {
+          "title": "ONNX versnelling",
+          "description": "Hardwareversnelling voor ONNX modellen (Parakeet, Canary, Moonshine, etc.). DirectML op Windows is experimenteel. Modellen kunnen mislukken om te transcriberen."
+        },
+        "gpuDevice": {
+          "title": "GPU apparaat",
+          "description": "Selecteer welke GPU moet worden gebruikt voor Whisper inferentie. Auto kiest de dedicated GPU.",
+          "auto": "Auto"
+        }
+      },
+      "startHidden": {
+        "label": "Verborgen starten",
+        "description": "Starten naar systeemtray zonder het venster te openen."
+      },
+      "autostart": {
+        "label": "Starten bij opstarten",
+        "description": "Start Momentum Talk automatisch wanneer u zich aanmeldt op uw computer."
+      },
+      "showTrayIcon": {
+        "label": "Systeemvak-pictogram weergeven",
+        "description": "Geef het Momentum Talk-pictogram in het systeemvak weer."
+      },
+      "overlay": {
+        "title": "Overlay-positie",
+        "description": "Geef visuele feedbackoverlay weer tijdens opname en transcriptie. Op Linux wordt 'Geen' aanbevolen.",
+        "options": {
+          "none": "Geen",
+          "bottom": "Onderaan",
+          "top": "Bovenaan"
+        }
+      },
+      "pasteMethod": {
+        "title": "Plakken methode",
+        "description": "Kies hoe tekst wordt ingevoegd. Direct: simuleert typen via systeeminvoer. Geen: slaat plakken over, werkt alleen history/klembord bij.",
+        "options": {
+          "clipboard": "Klembord ({{modifier}}+V)",
+          "clipboardCtrlShiftV": "Klembord (Ctrl+Shift+V)",
+          "clipboardShiftInsert": "Klembord (Shift+Insert)",
+          "direct": "Direct",
+          "none": "Geen",
+          "externalScript": "Extern script"
+        },
+        "externalScriptPlaceholder": "/path/to/your/script.sh"
+      },
+      "typingTool": {
+        "title": "Typgereedschap",
+        "description": "Kies welk Linux-typgereedschap moet worden gebruikt voor de Direct plakken methode. Auto zal automatisch het beste beschikbare gereedschap voor uw systeem detecteren en gebruiken.",
+        "options": {
+          "auto": "Auto (aanbevolen)"
+        }
+      },
+      "clipboardHandling": {
+        "title": "Klembord afhandeling",
+        "description": "Niet wijzigen klembord behoudt de huidige klembordinhoud na transcriptie. Kopie naar klembord laat het transcriptieresultaat in uw klembord na het plakken.",
+        "options": {
+          "dontModify": "Klembord niet wijzigen",
+          "copyToClipboard": "Kopieer naar klembord"
+        }
+      },
+      "autoSubmit": {
+        "title": "Automatisch indienen",
+        "description": "Verzend automatisch de geselecteerde toetscombinatie na tekstinvoer. Cmd+Enter is van toepassing op macOS, terwijl Windows/Linux Super+Enter gebruiken.",
+        "options": {
+          "off": "Uit",
+          "enter": "Enter",
+          "cmdEnter": "Cmd+Enter",
+          "superEnter": "Super+Enter",
+          "ctrlEnter": "Ctrl+Enter"
+        }
+      },
+      "translateToEnglish": {
+        "label": "Vertaal naar Engels",
+        "description": "Vertaal automatisch spraak van andere talen naar het Engels tijdens transcriptie."
+      },
+      "modelUnload": {
+        "title": "Model verwijderen",
+        "description": "Geef automatisch GPU/CPU geheugen vrij wanneer het model niet voor de opgegeven tijd is gebruikt",
+        "options": {
+          "never": "Nooit",
+          "immediately": "Direct",
+          "min2": "Na 2 minuten",
+          "min5": "Na 5 minuten",
+          "min10": "Na 10 minuten",
+          "min15": "Na 15 minuten",
+          "hour1": "Na 1 uur",
+          "sec15": "Na 15 seconden (Debug)"
+        }
+      },
+      "customWords": {
+        "title": "Aangepaste woorden",
+        "description": "Voeg woorden toe die vaak verkeerd gehoord of gespeld worden tijdens transcriptie. Het systeem corrigeert automatisch gelijkklinkende woorden die overeenkomen met uw lijst.",
+        "placeholder": "Voeg een woord toe",
+        "add": "Toevoegen",
+        "remove": "Verwijder {{word}}",
+        "duplicate": "\"{{word}}\" bestaat al"
+      }
+    },
+    "postProcessing": {
+      "title": "Nabewerking",
+      "hotkey": {
+        "title": "Sneltoets"
+      },
+      "api": {
+        "title": "API (OpenAI compatibel)",
+        "provider": {
+          "title": "Provider",
+          "description": "Selecteer een OpenAI-compatibele provider."
+        },
+        "appleIntelligence": {
+          "title": "Apple Intelligence",
+          "description": "Draait volledig lokaal. Geen API-sleutel of netwerktoegang vereist.",
+          "requirements": "Vereist een Apple Silicon Mac met macOS Tahoe (26.0) of hoger. Apple Intelligence moet zijn ingeschakeld in Systeeminstellingen.",
+          "unavailable": "Apple Intelligence is niet beschikbaar op dit apparaat. Vereist een Apple Silicon Mac met macOS Tahoe (26.0) of hoger met Apple Intelligence ingeschakeld in Systeeminstellingen."
+        },
+        "baseUrl": {
+          "title": "Base URL",
+          "description": "API base URL voor de geselecteerde provider. Alleen de aangepaste provider kan worden bewerkt.",
+          "placeholder": "https://api.openai.com/v1"
+        },
+        "apiKey": {
+          "title": "API-sleutel",
+          "description": "API-sleutel voor de geselecteerde provider.",
+          "placeholder": "sk-..."
+        },
+        "model": {
+          "title": "Model",
+          "descriptionApple": "Geef een optionale numerieke tokenlimiet op of behoud de standaard on-device preset.",
+          "descriptionCustom": "Geef de model-id op die door uw aangepaste endpoint wordt verwacht.",
+          "descriptionDefault": "Kies een model dat wordt blootgesteld door de geselecteerde provider.",
+          "placeholderApple": "Apple Intelligence",
+          "placeholderWithOptions": "Zoek of selecteer een model",
+          "placeholderNoOptions": "Typ een modelnaam",
+          "refreshModels": "Vernieuw modellen"
+        }
+      },
+      "prompts": {
+        "title": "Prompt",
+        "selectedPrompt": {
+          "title": "Geselecteerde prompt",
+          "description": "Selecteer een sjabloon voor verfijning van transcripties of maak een nieuwe aan. Gebruik ${output} in de prompttekst om naar het vastgelegde transcript te verwijzen."
+        },
+        "noPrompts": "Geen prompts beschikbaar",
+        "selectPrompt": "Selecteer een prompt",
+        "createNew": "Maak nieuwe prompt",
+        "promptLabel": "Promptlabel",
+        "promptLabelPlaceholder": "Voer promptnaam in",
+        "promptInstructions": "Promptinstructies",
+        "promptInstructionsPlaceholder": "Schrijf de instructies om na transcriptie uit te voeren. Voorbeeld: Verbeter grammatica en duidelijkheid voor de volgende tekst: ${output}",
+        "promptTip": "Tip: Gebruik <code>${output}</code> om de getranscribeerde tekst in uw prompt in te voegen.",
+        "updatePrompt": "Werk prompt bij",
+        "deletePrompt": "Verwijder prompt",
+        "createPrompt": "Maak prompt",
+        "cancel": "Annuleren",
+        "selectToEdit": "Selecteer een prompt hierboven om de details te bekijken en bewerken.",
+        "createFirst": "Klik op 'Maak nieuwe prompt' hierboven om uw eerste nabewerking prompt te maken."
+      }
+    },
+    "history": {
+      "title": "Geschiedenis",
+      "openFolder": "Open opnamemap",
+      "loading": "Geschiedenis laden...",
+      "empty": "Nog geen transcripties. Begin met opnamen om uw geschiedenis op te bouwen!",
+      "copyToClipboard": "Kopieer transcriptie naar klembord",
+      "save": "Bewaar transcriptie",
+      "unsave": "Verwijder uit opgeslagen",
+      "delete": "Verwijder item",
+      "deleteError": "Kan item niet verwijderen. Probeer het opnieuw.",
+      "retranscribe": "Hertranscribeer",
+      "retranscribeError": "Kan niet hertranscriberen. Probeer het opnieuw.",
+      "transcribing": "Transcriberen...",
+      "transcriptionFailed": "Transcriptie mislukt. U kunt opnieuw transcriberen met het retry-pictogram."
+    },
+    "debug": {
+      "title": "Debug",
+      "logDirectory": {
+        "title": "Logmap",
+        "description": "Locatie waar logbestanden worden opgeslagen"
+      },
+      "logLevel": {
+        "title": "Logniveau",
+        "description": "Stel de uitgebreidheid van loggen in"
+      },
+      "updateChecks": {
+        "label": "Controleer op updates",
+        "description": "Controleer automatisch op nieuwe versies van Momentum Talk"
+      },
+      "soundTheme": {
+        "label": "Geluidthema",
+        "description": "Kies een geluidthema voor feedback bij opname starten en stoppen"
+      },
+      "wordCorrectionThreshold": {
+        "title": "Woordcorrectie drempel",
+        "description": "Gevoeligheid voor aangepaste woordcorrecties"
+      },
+      "historyLimit": {
+        "title": "Geschiedenimlimiet",
+        "description": "Maximaal aantal geschiedenis-items om te houden",
+        "entries": "items"
+      },
+      "recordingRetention": {
+        "title": "Auto-verwijderen opnames",
+        "description": "Verwijder automatisch oude opnames om ruimte te besparen",
+        "never": "Nooit",
+        "preserveLimit": "Behoud nieuwste {{count}}",
+        "days3": "Na 3 dagen",
+        "weeks2": "Na 2 weken",
+        "months3": "Na 3 maanden",
+        "placeholder": "Selecteer retentieperiode..."
+      },
+      "alwaysOnMicrophone": {
+        "label": "Altijd aan microfoon",
+        "description": "Houd microfoon actief voor sneller antwoord"
+      },
+      "clamshellMicrophone": {
+        "title": "Clamshell microfoon",
+        "description": "Microfoon om te gebruiken wanneer laptopklepje gesloten is"
+      },
+      "postProcessingToggle": {
+        "label": "Nabewerking",
+        "description": "Schakel AI-aangedreven tekstverbetering na transcriptie in"
+      },
+      "muteWhileRecording": {
+        "label": "Dempen tijdens opname",
+        "description": "Dempen systeemaudio tijdens opname"
+      },
+      "appendTrailingSpace": {
+        "label": "Voeg spatie toe aan einde",
+        "description": "Voeg een spatie toe na geplakte transcriptie"
+      },
+      "keyboardImplementation": {
+        "title": "Toetsenbordimplementatie",
+        "description": "Kies de backend van de sneltoets.",
+        "bindingsReset": "Toetsenbordsneltoetsen waren niet compatibel en zijn opnieuw ingesteld op standaarden"
+      },
+      "paths": {
+        "appData": "App-gegevens:",
+        "models": "Modellen:",
+        "settings": "Instellingen:"
+      },
+      "pasteDelay": {
+        "title": "Plakken vertraging",
+        "description": "Vertraging voordat paste toetsaanslag wordt verzonden (in milliseconden). Verhoog als verkeerde tekst wordt geplakt."
+      },
+      "recordingBuffer": {
+        "title": "Extra opnamebuffer",
+        "description": "Extra tijd (in milliseconden) om na het loslaten van de toets op te nemen, om te volgen audio vast te leggen. 0 = geen extra buffer."
+      }
+    },
+    "about": {
+      "title": "Over",
+      "version": {
+        "title": "Versie",
+        "description": "Huidige versie van Momentum Talk"
+      },
+      "appDataDirectory": {
+        "title": "App-gegevensmap",
+        "description": "Locatie waar Momentum Talk zijn gegevens opslaat"
+      },
+      "sourceCode": {
+        "title": "Broncode",
+        "description": "Bekijk broncode en draag bij",
+        "button": "Bekijk op GitHub"
+      },
+      "supportDevelopment": {
+        "title": "Ondersteun ontwikkeling",
+        "description": "Help ons bij het bouwen van Momentum Talk",
+        "button": "Doneer"
+      },
+      "acknowledgments": {
+        "title": "Dankbetuigingen",
+        "whisper": {
+          "title": "Whisper.cpp",
+          "description": "Krachtige inferentie van OpenAI's Whisper automatische spraakherkenningsmodel",
+          "details": "Momentum Talk gebruikt Whisper.cpp voor snelle, lokale spraak-naar-tekst verwerking. Dankzij het geweldige werk van Georgi Gerganov en bijdragers."
+        }
+      }
+    }
+  },
+  "footer": {
+    "downloadingModel": "{{model}} downloaden...",
+    "checkingUpdates": "Controleren op updates...",
+    "updateAvailable": "Update beschikbaar: {{version}}",
+    "updateAvailableShort": "Update beschikbaar",
+    "upToDate": "Up-to-date",
+    "downloadUpdate": "Download update",
+    "restart": "Herstarten",
+    "updateCheckingDisabled": "Controle op updates uitgeschakeld",
+    "downloading": "Downloaden... {{progress}}%",
+    "installing": "Installeren...",
+    "preparing": "Voorbereiding...",
+    "checkForUpdates": "Controleer op updates",
+    "portableUpdateTitle": "Handmatige update vereist",
+    "portableUpdateMessage": "Draagbare installaties kunnen niet automatisch worden bijgewerkt. Voor update: download het nieuwste NSIS-installatieprogramma van GitHub Releases, installeer het in dezelfde map, kopieer vervolgens uw Data/ map (instellingen, modellen, opnames) van de oude naar de nieuwe versie.",
+    "portableUpdateButton": "Open GitHub-releases"
+  },
+  "common": {
+    "loading": "Laden...",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "reset": "Resetten",
+    "add": "Toevoegen",
+    "remove": "Verwijderen",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "create": "Maken",
+    "update": "Bijwerken",
+    "close": "Sluiten",
+    "open": "Openen",
+    "default": "Standaard",
+    "enabled": "Ingeschakeld",
+    "disabled": "Uitgeschakeld",
+    "on": "Aan",
+    "off": "Uit",
+    "yes": "Ja",
+    "no": "Nee",
+    "noOptionsFound": "Geen opties gevonden"
+  },
+  "accessibility": {
+    "permissionsRequired": "Toegankelijkheidsmachtigingen vereist",
+    "permissionsDescription": "Momentum Talk heeft toegankelijkheidsmachtigingen nodig om getranscribeerde tekst in te typen.",
+    "openSettings": "Open systeeminstellingen",
+    "dismiss": "Sluiten"
+  },
+  "errors": {
+    "loadDirectory": "Fout bij laden van map: {{error}}",
+    "micPermissionDeniedTitle": "Microfoontoegang geweigerd",
+    "micPermissionDenied": {
+      "generic": "Microfoontoegang is geweigerd door het besturingssysteem. Verleen microfoontoegang in uw systeeminstellingen.",
+      "windows": "Schakel microfoontoegang in via Instellingen → Privacy & beveiliging → Microfoon (inclusief desktopapptoegang).",
+      "macos": "Verleen microfoontoegang in Systeeminstellingen → Privacy & beveiliging → Microfoon.",
+      "linux": "Verleen microfoontoegang in uw systeem geluid of privacy-instellingen."
+    },
+    "noInputDeviceTitle": "Geen microfoon gevonden",
+    "noInputDevice": "Geen geluidsinvoerapparaat gedetecteerd. Sluit een microfoon of headset aan en probeer opnieuw.",
+    "recordingFailed": "Kan recording niet starten: {{error}}",
+    "modelLoadFailed": "Kan model niet laden: {{model}}",
+    "modelLoadFailedUnknown": "onbekend model",
+    "pasteFailedTitle": "Tekst plakken mislukt",
+    "pasteFailed": "Tekst kan niet in de actieve applicatie worden geplakt."
+  },
+  "appLanguage": {
+    "title": "Taal van toepassing",
+    "description": "Wijzig de taal van de Momentum Talk-interface"
+  },
+  "overlay": {
+    "transcribing": "Transcriberen...",
+    "processing": "Verwerking..."
+  }
+}

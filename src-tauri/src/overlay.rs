@@ -13,7 +13,7 @@ use tauri::WebviewWindowBuilder;
 use tauri::WebviewUrl;
 
 #[cfg(target_os = "macos")]
-use tauri_nspanel::{tauri_panel, CollectionBehavior, PanelBuilder, PanelLevel};
+use tauri_nspanel::{tauri_panel, CollectionBehavior, ManagerExt, PanelBuilder, PanelLevel};
 
 #[cfg(target_os = "linux")]
 use gtk_layer_shell::{Edge, KeyboardMode, Layer, LayerShell};
@@ -31,8 +31,8 @@ tauri_panel! {
     })
 }
 
-const OVERLAY_WIDTH: f64 = 172.0;
-const OVERLAY_HEIGHT: f64 = 36.0;
+const OVERLAY_WIDTH: f64 = 210.0;
+const OVERLAY_HEIGHT: f64 = 56.0;
 
 #[cfg(target_os = "macos")]
 const OVERLAY_TOP_OFFSET: f64 = 46.0;
@@ -109,22 +109,30 @@ fn init_gtk_layer_shell(overlay_window: &tauri::webview::WebviewWindow) -> bool 
     false
 }
 
-/// Forces a window to be topmost using Win32 API (Windows only)
-/// This is more reliable than Tauri's set_always_on_top which can be overridden
+/// Forces a window to be topmost and non-activating using Win32 API (Windows only)
 #[cfg(target_os = "windows")]
 fn force_overlay_topmost(overlay_window: &tauri::webview::WebviewWindow) {
     use windows::Win32::UI::WindowsAndMessaging::{
-        SetWindowPos, HWND_TOPMOST, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW,
+        GetWindowLongPtrW, SetWindowLongPtrW, SetWindowPos, GWL_EXSTYLE, HWND_TOPMOST,
+        SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_SHOWWINDOW, WS_EX_NOACTIVATE,
+        WS_EX_TOOLWINDOW,
     };
 
-    // Clone because run_on_main_thread takes 'static
     let overlay_clone = overlay_window.clone();
 
-    // Make sure the Win32 call happens on the UI thread
     let _ = overlay_clone.clone().run_on_main_thread(move || {
         if let Ok(hwnd) = overlay_clone.hwnd() {
             unsafe {
-                // Force Z-order: make this window topmost without changing size/pos or stealing focus
+                // Add WS_EX_NOACTIVATE so clicks never steal focus from the active app,
+                // and WS_EX_TOOLWINDOW to keep it out of Alt+Tab.
+                let ex_style = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
+                SetWindowLongPtrW(
+                    hwnd,
+                    GWL_EXSTYLE,
+                    ex_style | WS_EX_NOACTIVATE.0 as isize | WS_EX_TOOLWINDOW.0 as isize,
+                );
+
+                // Force topmost without activating
                 let _ = SetWindowPos(
                     hwnd,
                     Some(HWND_TOPMOST),
@@ -328,6 +336,25 @@ fn show_overlay_state(app_handle: &AppHandle, state: &str) {
 
     update_overlay_position(app_handle);
 
+    // On macOS use orderFrontRegardless via the NSPanel handle so the panel
+    // never activates the app or steals focus from whatever window the user is typing in.
+    // Must be dispatched to the main thread — AppKit window operations are not thread-safe.
+    #[cfg(target_os = "macos")]
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        let state_owned = state.to_string();
+        let app_handle_clone = app_handle.clone();
+        let _ = overlay_window.run_on_main_thread(move || {
+            if let Ok(panel) = app_handle_clone.get_webview_panel("recording_overlay") {
+                panel.order_front_regardless();
+            }
+            if let Some(w) = app_handle_clone.get_webview_window("recording_overlay") {
+                let _ = w.emit("show-overlay", state_owned);
+            }
+        });
+    }
+
+    // On other platforms fall back to the standard show
+    #[cfg(not(target_os = "macos"))]
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
         let _ = overlay_window.show();
 
@@ -363,8 +390,12 @@ pub fn update_overlay_position(app_handle: &AppHandle) {
         }
 
         if let Some((x, y)) = calculate_overlay_position(app_handle) {
-            let _ = overlay_window
-                .set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }));
+            let app_handle_clone = overlay_window.app_handle().clone();
+            let _ = overlay_window.run_on_main_thread(move || {
+                if let Some(w) = app_handle_clone.get_webview_window("recording_overlay") {
+                    let _ = w.set_position(tauri::Position::Logical(tauri::LogicalPosition { x, y }));
+                }
+            });
         }
     }
 }

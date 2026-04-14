@@ -71,12 +71,12 @@ const getSupportedLanguage = (
   return supported ? supported.code : null;
 };
 
-// Initialize i18n with English as default
+// Initialize i18n with Dutch as default
 // Language will be synced from settings after init
 i18n.use(initReactI18next).init({
   resources,
-  lng: "en",
-  fallbackLng: "en",
+  lng: "nl",
+  fallbackLng: "nl",
   interpolation: {
     escapeValue: false, // React already escapes values
   },

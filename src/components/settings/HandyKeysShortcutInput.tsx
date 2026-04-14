@@ -267,8 +267,8 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
           <div
             ref={shortcutRef}
             style={{
-              background: "#F5F4F0",
-              border: "1px solid #1A3D2B",
+              background: "#F2F2F7",
+              border: "1px solid #34C759",
               borderRadius: 5,
               padding: "4px 10px",
               fontSize: 12,
@@ -281,8 +281,8 @@ export const HandyKeysShortcutInput: React.FC<HandyKeysShortcutInputProps> = ({
           <div
             onClick={startRecording}
             style={{
-              background: "#F5F4F0",
-              border: "1px solid #E8E8E8",
+              background: "#F2F2F7",
+              border: "1px solid #E5E5EA",
               borderRadius: 5,
               padding: "4px 10px",
               fontSize: 12,

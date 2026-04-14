@@ -80,9 +80,9 @@ export const Slider: React.FC<SliderProps> = ({
             disabled={disabled}
             className="mt-slider flex-grow"
             style={{
-              background: `linear-gradient(to right, #1A3D2B ${
+              background: `linear-gradient(to right, #2D6A4F ${
                 ((value - min) / (max - min)) * 100
-              }%, #E8E8E8 ${
+              }%, #E5E5EA ${
                 ((value - min) / (max - min)) * 100
               }%)`,
             }}

@@ -16,7 +16,7 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
       {title && (
         <div className="px-1">
           <h2
-            className="font-bold uppercase text-forest"
+            className="font-semibold uppercase text-dark-grey"
             style={{ fontSize: 9, letterSpacing: "2px" }}
           >
             {title}
@@ -28,7 +28,7 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
       )}
       <div
         className="bg-white overflow-visible"
-        style={{ border: "1px solid #E8E8E8", borderRadius: 8 }}
+        style={{ border: "1px solid #E5E5EA", borderRadius: 10 }}
       >
         <div className="divide-y divide-border-color">{children}</div>
       </div>
