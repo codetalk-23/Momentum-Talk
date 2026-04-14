@@ -11,6 +11,7 @@ import { ModelStateEvent, RecordingErrorEvent } from "./lib/types/events";
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
+import { ReferralModal } from "./components/ReferralModal";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
@@ -35,6 +36,7 @@ function App() {
   const [isReturningUser, setIsReturningUser] = useState(false);
   const [currentSection, setCurrentSection] =
     useState<SidebarSection>("general");
+  const [showReferral, setShowReferral] = useState(false);
   const { settings, updateSetting } = useSettings();
   const direction = getLanguageDirection(i18n.language);
   const refreshAudioDevices = useSettingsStore(
@@ -135,6 +137,32 @@ function App() {
       unlisten.then((fn) => fn());
     };
   }, [t]);
+
+  // Show referral modal once after 20 transcriptions
+  useEffect(() => {
+    const STORAGE_KEY = "transcription_count";
+    const SHOWN_KEY = "referral_modal_shown";
+
+    const unlisten = listen<{ action: string }>(
+      "history-update-payload",
+      (event) => {
+        if (event.payload.action !== "added") return;
+        if (localStorage.getItem(SHOWN_KEY)) return;
+
+        const count =
+          parseInt(localStorage.getItem(STORAGE_KEY) ?? "0", 10) + 1;
+        localStorage.setItem(STORAGE_KEY, String(count));
+
+        if (count >= 20) {
+          localStorage.setItem(SHOWN_KEY, "true");
+          setShowReferral(true);
+        }
+      },
+    );
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, []);
 
   // Listen for model loading failures and show a toast
   useEffect(() => {
@@ -263,6 +291,9 @@ function App() {
           },
         }}
       />
+      {showReferral && (
+        <ReferralModal onClose={() => setShowReferral(false)} />
+      )}
       {/* Main content area that takes remaining space */}
       <div className="flex-1 flex overflow-hidden">
         <Sidebar

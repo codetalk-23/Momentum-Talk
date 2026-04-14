@@ -608,5 +608,14 @@
   "overlay": {
     "transcribing": "Transkribiere...",
     "processing": "Verarbeite..."
+  },
+  "referral": {
+    "buttonLabel": "Momentum Talk verschenken",
+    "title": "Momentum Talk teilen",
+    "description": "",
+    "messageLabel": "Deine Nachricht",
+    "friendMessage": "Hier ist der Download-Link zu Momentum Talk, von dem ich dir erzählt habe",
+    "copy": "Nachricht kopieren",
+    "copied": "Kopiert!"
   }
 }

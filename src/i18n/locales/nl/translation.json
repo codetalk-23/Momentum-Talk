@@ -18,6 +18,7 @@
     "about": "Over"
   },
   "onboarding": {
+    "preparingModel": "Je AI-model wordt voorbereid",
     "subtitle": "Kies een transcriptiemodel om te beginnen",
     "recommended": "Aanbevolen",
     "download": "Download",
@@ -607,5 +608,14 @@
   "overlay": {
     "transcribing": "Transcriberen...",
     "processing": "Verwerking..."
+  },
+  "referral": {
+    "buttonLabel": "Geef Momentum Talk cadeau",
+    "title": "Deel Momentum Talk",
+    "description": "",
+    "messageLabel": "Jouw berichtje",
+    "friendMessage": "Hier is de download link naar Momentum Talk waar ik je over vertelde",
+    "copy": "Kopieer bericht",
+    "copied": "Gekopieerd!"
   }
 }

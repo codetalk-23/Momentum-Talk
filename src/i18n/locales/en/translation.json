@@ -18,6 +18,7 @@
     "about": "About"
   },
   "onboarding": {
+    "preparingModel": "Preparing your AI model",
     "subtitle": "To get started, choose a transcription model",
     "recommended": "Recommended",
     "download": "Download",
@@ -610,10 +611,12 @@
     "processing": "Processing..."
   },
   "referral": {
-    "buttonLabel": "Share Momentum Talk",
-    "title": "Know someone who could use this?",
-    "description": "Here's a link to download Momentum Talk — the speech-to-text app that gets out of your way.",
-    "linkLabel": "Download Momentum Talk",
-    "close": "Close"
+    "buttonLabel": "Gift Momentum Talk",
+    "title": "Share Momentum Talk",
+    "description": "",
+    "messageLabel": "Your message",
+    "friendMessage": "Here's the download link for Momentum Talk I was telling you about",
+    "copy": "Copy message",
+    "copied": "Copied!"
   }
 }

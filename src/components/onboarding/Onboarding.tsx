@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 import MomentumainlLogo from "../icons/MomentumainlLogo";
 import { useModelStore } from "../../stores/modelStore";
 
@@ -90,24 +89,27 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
   const showRealProgress = isDownloading && progress !== undefined && totalKnown;
 
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center p-6 gap-6">
-      <div className="flex flex-col items-center gap-2">
-        <MomentumainlLogo width={200} />
+    <div className="h-screen w-screen flex flex-col items-center justify-center p-8 gap-10">
+      <div className="flex flex-col items-center gap-3">
+        <MomentumainlLogo width={180} />
+        <p className="text-sm text-text/40 tracking-wide">
+          {t("onboarding.preparingModel")}
+        </p>
       </div>
 
-      <div className="flex flex-col items-center gap-4 w-full max-w-sm">
+      <div className="flex flex-col items-center gap-3 w-full max-w-xs">
         {showRealProgress ? (
           <>
-            <div className="w-full h-1.5 bg-border-color rounded-full overflow-hidden">
+            <div className="w-full h-[3px] bg-border-color rounded-full overflow-hidden">
               <div
-                className="h-full bg-accent rounded-full transition-all duration-300"
+                className="h-full bg-accent rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div className="flex items-center justify-between w-full text-sm text-text/60">
-              <span>{getStatusLabel()}</span>
+            <div className="flex items-center justify-between w-full">
+              <span className="text-xs text-text/40">{getStatusLabel()}</span>
               {speed !== undefined && speed > 0 && (
-                <span className="tabular-nums">
+                <span className="text-xs text-text/30 tabular-nums">
                   {t("modelSelector.downloadSpeed", {
                     speed: speed.toFixed(1),
                   })}
@@ -117,13 +119,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
           </>
         ) : (
           <>
-            <div className="w-full h-1.5 bg-border-color rounded-full overflow-hidden">
-              <div className="h-full bg-accent rounded-full animate-pulse w-full" />
+            <div className="w-full h-[3px] bg-border-color rounded-full overflow-hidden relative">
+              <div
+                className="absolute inset-y-0 left-0 w-1/4 bg-accent rounded-full"
+                style={{ animation: "progress-shimmer 1.6s ease-in-out infinite" }}
+              />
             </div>
-            <div className="flex items-center gap-2 text-sm text-text/60">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>{getStatusLabel()}</span>
-            </div>
+            <span className="text-xs text-text/40">{getStatusLabel()}</span>
           </>
         )}
       </div>

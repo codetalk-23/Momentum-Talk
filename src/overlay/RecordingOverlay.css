@@ -22,11 +22,15 @@
   background: rgba(58, 58, 60, 0.88);
   border: 0.5px solid rgba(255, 255, 255, 0.09);
   border-radius: 100px;
-  padding: 12px 20px;
-  height: 48px;
+  padding: 0 14px;
+  height: 34px;
   box-sizing: border-box;
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
+
+.overlay-pill--recording {
+  padding: 0 5px 0 14px;
 }
 
 /* bars */
@@ -34,7 +38,6 @@
   display: flex;
   align-items: center;
   gap: 3px;
-  height: 32px;
 }
 
 .bar {
@@ -44,13 +47,13 @@
   transition: height 0.08s ease, opacity 0.08s ease;
 }
 
-/* cancel - subtle X rechts van de bars */
+/* cancel - circle X on the right of the pill */
 .cancel-button {
-  width: 18px;
-  height: 18px;
-  margin-left: 8px;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   cursor: pointer;
   position: relative;
   flex-shrink: 0;

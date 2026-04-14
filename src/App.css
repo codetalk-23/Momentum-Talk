@@ -55,6 +55,11 @@
   background-color: var(--color-background);
 }
 
+@keyframes progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
 .container {
   margin: 0;
   padding-top: 10vh;

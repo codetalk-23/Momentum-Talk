@@ -96,7 +96,7 @@ const RecordingOverlay: React.FC = () => {
       className={`recording-overlay ${isVisible ? "fade-in" : ""}`}
     >
       {state === "recording" && (
-        <div className="overlay-pill">
+        <div className="overlay-pill overlay-pill--recording">
           <div className="bars-container">
             {levels.map((v, i) => (
               <div

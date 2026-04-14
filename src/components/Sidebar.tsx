@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import MomentumainlLogo from "./icons/MomentumainlLogo";
 import { useSettings } from "../hooks/useSettings";
+import { ReferralModal } from "./ReferralModal";
 import {
   GeneralSettings,
   AdvancedSettings,
@@ -77,6 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { t } = useTranslation();
   const { settings } = useSettings();
+  const [showReferral, setShowReferral] = useState(false);
 
   const navSections = Object.entries(SECTIONS_CONFIG)
     .filter(([_, config]) => config.visibleInNav && config.enabled(settings))
@@ -90,7 +92,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="px-5 py-5 border-b border-border-color">
         <MomentumainlLogo width={110} />
       </div>
-      <nav className="flex flex-col gap-0.5 px-3 pt-4">
+      <nav className="flex flex-col gap-0.5 px-3 pt-4 flex-1">
         {navSections.map((section) => {
           const isActive = activeSection === section.id;
           return (
@@ -119,6 +121,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
           );
         })}
       </nav>
+
+      {/* Referral button pinned to bottom-right — icon only */}
+      <div className="flex justify-end px-3 pb-4">
+        <button
+          onClick={() => setShowReferral(true)}
+          title={t("referral.buttonLabel")}
+          className="flex items-center justify-center w-8 h-8 rounded-md hover:bg-warm-grey transition-colors"
+          aria-label={t("referral.buttonLabel")}
+        >
+          <img
+            src="/present-svgrepo-com.svg"
+            alt=""
+            aria-hidden="true"
+            style={{ width: 22, height: 22, opacity: 0.65, filter: "brightness(0.4)" }}
+          />
+        </button>
+      </div>
+
+      {showReferral && (
+        <ReferralModal onClose={() => setShowReferral(false)} />
+      )}
     </div>
   );
 };
