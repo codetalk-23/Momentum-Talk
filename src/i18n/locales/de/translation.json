@@ -18,6 +18,7 @@
     "about": "Info"
   },
   "onboarding": {
+    "preparingModel": "Dein KI-Modell wird vorbereitet",
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
     "recommended": "Empfohlen",
     "download": "Herunterladen",

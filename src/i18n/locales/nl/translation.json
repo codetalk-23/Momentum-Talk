@@ -333,7 +333,8 @@
       },
       "translateToEnglish": {
         "label": "Vertaal naar Engels",
-        "description": "Vertaal automatisch spraak van andere talen naar het Engels tijdens transcriptie."
+        "description": "Vertaal automatisch spraak van andere talen naar het Engels tijdens transcriptie.",
+        "descriptionUnsupported": "Vertaling wordt niet ondersteund door het {{model}} model."
       },
       "modelUnload": {
         "title": "Model verwijderen",
