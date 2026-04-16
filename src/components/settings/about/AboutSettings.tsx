@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getVersion } from "@tauri-apps/api/app";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 
 export const AboutSettings: React.FC = () => {
   const { t } = useTranslation();
+  const [version, setVersion] = useState("");
+
+  useEffect(() => {
+    getVersion().then(setVersion).catch(() => setVersion("unknown"));
+  }, []);
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
@@ -18,7 +24,7 @@ export const AboutSettings: React.FC = () => {
           </span>
           <span className="text-sm text-gray-500">
             {/* eslint-disable-next-line i18next/no-literal-string */}
-            v1.24
+            v{version}
           </span>
         </div>
       </SettingsGroup>
