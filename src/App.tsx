@@ -10,7 +10,13 @@ import {
 import { ModelStateEvent, RecordingErrorEvent } from "./lib/types/events";
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
-import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
+import Onboarding, {
+  AccessibilityOnboarding,
+  WelcomeScreen,
+  TestScreen,
+  ShortcutSetupScreen,
+  CompleteScreen,
+} from "./components/onboarding";
 import { ReferralModal } from "./components/ReferralModal";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
 import { useSettings } from "./hooks/useSettings";
@@ -18,7 +24,7 @@ import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
-type OnboardingStep = "accessibility" | "model" | "done";
+type OnboardingStep = "welcome" | "accessibility" | "model" | "test" | "shortcut" | "complete" | "done";
 
 const renderSettingsContent = (section: SidebarSection) => {
   const ActiveComponent =
@@ -240,9 +246,9 @@ function App() {
 
         setOnboardingStep("done");
       } else {
-        // New user - start full onboarding
+        // New user - start full onboarding with welcome screen
         setIsReturningUser(false);
-        setOnboardingStep("accessibility");
+        setOnboardingStep("welcome");
       }
     } catch (error) {
       console.error("Failed to check onboarding status:", error);
@@ -250,14 +256,27 @@ function App() {
     }
   };
 
+  const handleWelcomeComplete = () => {
+    setOnboardingStep("accessibility");
+  };
+
   const handleAccessibilityComplete = () => {
-    // Returning users already have models, skip to main app
-    // New users need to select a model
     setOnboardingStep(isReturningUser ? "done" : "model");
   };
 
   const handleModelSelected = useCallback(() => {
-    // Transition to main app - user has started a download
+    setOnboardingStep("test");
+  }, []);
+
+  const handleTestComplete = () => {
+    setOnboardingStep("shortcut");
+  };
+
+  const handleShortcutComplete = () => {
+    setOnboardingStep("complete");
+  };
+
+  const handleCompleteScreen = useCallback(() => {
     setOnboardingStep("done");
   }, []);
 
@@ -266,12 +285,28 @@ function App() {
     return null;
   }
 
+  if (onboardingStep === "welcome") {
+    return <WelcomeScreen onComplete={handleWelcomeComplete} />;
+  }
+
   if (onboardingStep === "accessibility") {
     return <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />;
   }
 
   if (onboardingStep === "model") {
     return <Onboarding onModelSelected={handleModelSelected} />;
+  }
+
+  if (onboardingStep === "test") {
+    return <TestScreen onComplete={handleTestComplete} />;
+  }
+
+  if (onboardingStep === "shortcut") {
+    return <ShortcutSetupScreen onComplete={handleShortcutComplete} />;
+  }
+
+  if (onboardingStep === "complete") {
+    return <CompleteScreen onComplete={handleCompleteScreen} />;
   }
 
   return (

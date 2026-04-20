@@ -19,8 +19,7 @@ export const AboutSettings: React.FC = () => {
           style={{ padding: "14px 18px" }}
         >
           <span className="text-sm font-medium text-near-black">
-            {/* eslint-disable-next-line i18next/no-literal-string */}
-            Momentum Talk
+            {t("settings.about.appName")}
           </span>
           <span className="text-sm text-gray-500">
             {/* eslint-disable-next-line i18next/no-literal-string */}
@@ -29,11 +28,10 @@ export const AboutSettings: React.FC = () => {
         </div>
       </SettingsGroup>
 
-      <SettingsGroup title="Momentum">
+      <SettingsGroup title={t("settings.about.momentum.title")}>
         <div style={{ padding: "14px 18px" }} className="space-y-2">
           <p className="text-sm text-near-black">
-            {/* eslint-disable-next-line i18next/no-literal-string */}
-            Momentum is een AI implementatiepartner voor het Nederlandse MKB. 
+            {t("settings.about.momentum.description")}
           </p>
           <a
             href="https://www.momentumai.nl"
@@ -41,8 +39,7 @@ export const AboutSettings: React.FC = () => {
             rel="noopener noreferrer"
             className="text-sm text-blue-600 hover:underline"
           >
-            {/* eslint-disable-next-line i18next/no-literal-string */}
-            www.momentumai.nl
+            {t("settings.about.momentum.website")}
           </a>
         </div>
       </SettingsGroup>

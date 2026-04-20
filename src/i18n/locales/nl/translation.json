@@ -3,7 +3,6 @@
     "settings": "Instellingen...",
     "checkUpdates": "Controleer op updates...",
     "copyLastTranscript": "Kopieer laatste transcript",
-    "unloadModel": "Model verwijderen",
     "model": "Model",
     "quit": "Afsluiten",
     "cancel": "Annuleren"
@@ -18,7 +17,7 @@
     "about": "Over"
   },
   "onboarding": {
-    "preparingModel": "Je AI-model wordt voorbereid",
+    "preparingModel": "Momentum Talk wordt voor je klaargezet",
     "subtitle": "Kies een transcriptiemodel om te beginnen",
     "recommended": "Aanbevolen",
     "download": "Download",
@@ -94,6 +93,32 @@
         "name": "Cohere",
         "description": "Een groot, langzamer maar zeer nauwkeurig meertalig model."
       }
+    },
+    "welcome": {
+      "title": "Welkom bij Momentum Talk",
+      "subtitle": "Laten we je instellen",
+      "continue": "Doorgaan"
+    },
+    "downloadingModel": "We maken Momentum Talk klaar voor je…",
+    "test": {
+      "title": "Je bent klaar — probeer het zelf",
+      "subtitle": "Druk op",
+      "subtitleSuffix": "en begin te spreken — druk nogmaals om te stoppen.",
+      "exampleSentence": "Goedendag! Mag ik je een kopje koffie aanbieden?",
+      "continueButton": "Doorgaan",
+      "skip": "Overslaan"
+    },
+    "shortcut": {
+      "title": "Hoe wil je Momentum Talk activeren?",
+      "subtitle": "Druk op de toetsen die je wilt gebruiken om transcriptie te starten.",
+      "currentLabel": "Huidige sneltoets",
+      "pressKeys": "Druk op toetsen...",
+      "keep": "Huidige sneltoets behouden",
+      "save": "Opslaan & doorgaan"
+    },
+    "complete": {
+      "ready": "Je bent er helemaal klaar voor.",
+      "tagline": "Veel tijdsbesparing!"
     },
     "errors": {
       "loadModels": "Kan beschikbare modellen niet laden",
@@ -512,6 +537,12 @@
     },
     "about": {
       "title": "Over",
+      "appName": "Momentum Talk",
+      "momentum": {
+        "title": "Momentum",
+        "description": "Momentum is een AI implementatiepartner voor het Nederlandse MKB.",
+        "website": "www.momentumai.nl"
+      },
       "version": {
         "title": "Versie",
         "description": "Huidige versie van Momentum Talk"
@@ -612,10 +643,10 @@
   },
   "referral": {
     "buttonLabel": "Geef Momentum Talk cadeau",
-    "title": "Deel Momentum Talk",
+    "title": "Geef Momentum Talk cadeau!",
     "description": "",
     "messageLabel": "Jouw berichtje",
-    "friendMessage": "Hier is de download link naar Momentum Talk waar ik je over vertelde",
+    "friendMessage": "Hé, hier is de downloadlink voor Momentum Talk, de app waar ik je over vertelde",
     "copy": "Kopieer bericht",
     "copied": "Gekopieerd!"
   }

@@ -453,7 +453,7 @@ fn default_update_checks_enabled() -> bool {
 }
 
 fn default_selected_language() -> String {
-    "auto".to_string()
+    "en".to_string()
 }
 
 fn default_overlay_position() -> OverlayPosition {
@@ -492,7 +492,7 @@ fn default_recording_retention_period() -> RecordingRetentionPeriod {
 }
 
 fn default_audio_feedback_volume() -> f32 {
-    0.1
+    0.8
 }
 
 fn default_sound_theme() -> SoundTheme {
@@ -504,9 +504,7 @@ fn default_post_process_enabled() -> bool {
 }
 
 fn default_app_language() -> String {
-    tauri_plugin_os::locale()
-        .map(|l| l.replace('_', "-"))
-        .unwrap_or_else(|| "en".to_string())
+    "en".to_string()
 }
 
 fn default_show_tray_icon() -> bool {
@@ -753,7 +751,7 @@ pub fn get_default_settings() -> AppSettings {
     AppSettings {
         bindings,
         push_to_talk: false,
-        audio_feedback: false,
+        audio_feedback: true,
         audio_feedback_volume: default_audio_feedback_volume(),
         sound_theme: default_sound_theme(),
         start_hidden: default_start_hidden(),
@@ -765,7 +763,7 @@ pub fn get_default_settings() -> AppSettings {
         clamshell_microphone: None,
         selected_output_device: None,
         translate_to_english: false,
-        selected_language: "auto".to_string(),
+        selected_language: "en".to_string(),
         overlay_position: default_overlay_position(),
         debug_mode: false,
         log_level: default_log_level(),

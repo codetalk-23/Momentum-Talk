@@ -3,7 +3,6 @@
     "settings": "Einstellungen...",
     "checkUpdates": "Nach Updates suchen...",
     "copyLastTranscript": "Letzte Transkription kopieren",
-    "unloadModel": "Modell entladen",
     "model": "Modell",
     "quit": "Beenden",
     "cancel": "Abbrechen"
@@ -512,6 +511,12 @@
     },
     "about": {
       "title": "Info",
+      "appName": "Momentum Talk",
+      "momentum": {
+        "title": "Momentum",
+        "description": "Momentum ist ein KI-Implementierungspartner für niederländische KMUs.",
+        "website": "www.momentumai.nl"
+      },
       "version": {
         "title": "Version",
         "description": "Aktuelle Version von Momentum"

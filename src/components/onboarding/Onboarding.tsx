@@ -89,27 +89,29 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
   const showRealProgress = isDownloading && progress !== undefined && totalKnown;
 
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center p-8 gap-10">
-      <div className="flex flex-col items-center gap-3">
-        <MomentumainlLogo width={180} />
-        <p className="text-sm text-text/40 tracking-wide">
-          {t("onboarding.preparingModel")}
-        </p>
+    <div className="h-screen w-screen flex flex-col items-center justify-center px-8 gap-12">
+      <div className="flex flex-col items-center gap-4">
+        <MomentumainlLogo width={130} />
+        <div className="flex flex-col items-center gap-2 text-center">
+          <p className="text-[22px] font-normal text-text tracking-tight">
+            {t("onboarding.downloadingModel")}
+          </p>
+        </div>
       </div>
 
-      <div className="flex flex-col items-center gap-3 w-full max-w-xs">
+      <div className="flex flex-col items-center gap-3 w-full max-w-[280px]">
         {showRealProgress ? (
           <>
-            <div className="w-full h-[3px] bg-border-color rounded-full overflow-hidden">
+            <div className="w-full h-[2px] bg-border-color rounded-full overflow-hidden">
               <div
                 className="h-full bg-accent rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               />
             </div>
             <div className="flex items-center justify-between w-full">
-              <span className="text-xs text-text/40">{getStatusLabel()}</span>
+              <span className="text-[11px] text-text/40">{getStatusLabel()}</span>
               {speed !== undefined && speed > 0 && (
-                <span className="text-xs text-text/30 tabular-nums">
+                <span className="text-[11px] text-text/30 tabular-nums">
                   {t("modelSelector.downloadSpeed", {
                     speed: speed.toFixed(1),
                   })}
@@ -119,13 +121,13 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
           </>
         ) : (
           <>
-            <div className="w-full h-[3px] bg-border-color rounded-full overflow-hidden relative">
+            <div className="w-full h-[2px] bg-border-color rounded-full overflow-hidden relative">
               <div
                 className="absolute inset-y-0 left-0 w-1/4 bg-accent rounded-full"
                 style={{ animation: "progress-shimmer 1.6s ease-in-out infinite" }}
               />
             </div>
-            <span className="text-xs text-text/40">{getStatusLabel()}</span>
+            <span className="text-[11px] text-text/40">{getStatusLabel()}</span>
           </>
         )}
       </div>

@@ -134,8 +134,8 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
           background: "#fff",
           borderRadius: 20,
           border: "0.5px solid rgba(0,0,0,0.1)",
-          padding: "2.5rem 2rem 2rem",
-          maxWidth: 360,
+          padding: "3rem 2.5rem 2.5rem",
+          maxWidth: 440,
           width: "100%",
           textAlign: "center",
           position: "relative",
@@ -165,11 +165,11 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
         </button>
 
         {/* Icon box — confetti origin */}
-        <div ref={iconRef} style={{ marginBottom: "1.5rem" }}>
+        <div ref={iconRef} style={{ marginBottom: "1.75rem" }}>
           <div
             style={{
-              width: 56,
-              height: 56,
+              width: 64,
+              height: 64,
               background: "#F5F4F0",
               borderRadius: 14,
               display: "inline-flex",
@@ -189,11 +189,12 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
         {/* Heading */}
         <h2
           style={{
-            fontSize: 22,
-            fontWeight: 500,
+            fontSize: 32,
+            fontWeight: 700,
             color: "#111",
-            margin: "0 0 1.75rem",
-            lineHeight: 1.3,
+            margin: "0 0 2rem",
+            lineHeight: 1.15,
+            letterSpacing: "-0.02em",
           }}
         >
           {t("referral.title")}
@@ -217,17 +218,17 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
         <div
           style={{
             background: "#f7f7f5",
-            border: "0.5px dashed #ccc",
+            border: "1px solid #E8E8E8",
             borderRadius: 12,
-            padding: "1rem 1.25rem",
+            padding: "1.25rem 1.5rem",
             textAlign: "left",
             marginBottom: "1.25rem",
           }}
         >
-          <p style={{ fontSize: 14, color: "#111", margin: "0 0 8px", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+          <p style={{ fontSize: 15, color: "#111", margin: "0 0 8px", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
             {t("referral.friendMessage")}
           </p>
-          <p style={{ fontSize: 13, color: "#aaa", margin: 0 }}>
+          <p style={{ fontSize: 13, color: "#888", margin: 0 }}>
             {DOWNLOAD_URL}
           </p>
         </div>
@@ -237,13 +238,13 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
           onClick={handleCopy}
           style={{
             width: "100%",
-            padding: 13,
-            borderRadius: 10,
-            background: copied ? "#2A7A5A" : "#2D6A4F",
+            padding: 15,
+            borderRadius: 12,
+            background: copied ? "#2D6A4F" : "#1A3D2B",
             color: "#fff",
-            border: `1px solid ${copied ? "#2A7A5A" : "#2D6A4F"}`,
-            fontSize: 14,
-            fontWeight: 500,
+            border: `1px solid ${copied ? "#2D6A4F" : "#1A3D2B"}`,
+            fontSize: 15,
+            fontWeight: 600,
             cursor: "pointer",
             letterSpacing: "0.02em",
             transition: "background 0.2s",

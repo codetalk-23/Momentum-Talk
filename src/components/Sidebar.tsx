@@ -105,17 +105,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   : "text-dark-grey font-normal hover:bg-warm-grey/60"
               }`}
             >
-              {isActive && (
-                <span
-                  className="shrink-0 rounded-full"
-                  style={{
-                    width: 6,
-                    height: 6,
-                    background: "#2D6A4F",
-                  }}
-                />
-              )}
-              {!isActive && <span style={{ width: 6, height: 6, flexShrink: 0 }} />}
               <span className="text-sm truncate">{t(section.labelKey)}</span>
             </button>
           );

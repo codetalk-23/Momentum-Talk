@@ -3,7 +3,6 @@
     "settings": "Settings...",
     "checkUpdates": "Check for Updates...",
     "copyLastTranscript": "Copy Last Transcript",
-    "unloadModel": "Unload Model",
     "model": "Model",
     "quit": "Quit",
     "cancel": "Cancel"
@@ -18,7 +17,7 @@
     "about": "About"
   },
   "onboarding": {
-    "preparingModel": "Preparing your AI model",
+    "preparingModel": "Setting up your Momentum Talk workspace",
     "subtitle": "To get started, choose a transcription model",
     "recommended": "Recommended",
     "download": "Download",
@@ -95,6 +94,32 @@
         "description": "A large, slower, but very accurate multilingual model."
       }
     },
+    "welcome": {
+      "title": "Welcome to Momentum Talk",
+      "subtitle": "Let's get you set up",
+      "continue": "Continue"
+    },
+    "downloadingModel": "Getting Momentum Talk ready for you…",
+    "test": {
+      "title": "You're all set — try it yourself",
+      "subtitle": "Press",
+      "subtitleSuffix": "and start speaking — press it again to stop.",
+      "exampleSentence": "Good day! Can I get you a cup of coffee?",
+      "continueButton": "Continue",
+      "skip": "Skip"
+    },
+    "shortcut": {
+      "title": "How do you want to trigger Momentum Talk?",
+      "subtitle": "Press the keys you want to use to start transcription.",
+      "currentLabel": "Current shortcut",
+      "pressKeys": "Press keys...",
+      "keep": "Keep current shortcut",
+      "save": "Save & Continue"
+    },
+    "complete": {
+      "ready": "You're all set.",
+      "tagline": "Happy time saving!"
+    },
     "errors": {
       "loadModels": "Failed to load available models",
       "downloadModel": "Failed to download model: {{error}}"
@@ -104,11 +129,11 @@
       "description": "Momentum Talk needs a couple of permissions to work properly.",
       "microphone": {
         "title": "Microphone Access",
-        "description": "Required to hear your voice for transcription."
+        "description": "First, you'll need to give permission to access your microphone so we can hear you speak."
       },
       "accessibility": {
         "title": "Accessibility Access",
-        "description": "Required to type transcribed text into your applications."
+        "description": "We also need accessibility access so we can type transcriptions directly into any app."
       },
       "grant": "Grant Permission",
       "granted": "Granted",
@@ -512,6 +537,12 @@
     },
     "about": {
       "title": "About",
+      "appName": "Momentum Talk",
+      "momentum": {
+        "title": "Momentum",
+        "description": "Momentum is an AI implementation partner for Dutch SMBs.",
+        "website": "www.momentumai.nl"
+      },
       "version": {
         "title": "Version",
         "description": "Current version of Momentum Talk"
@@ -612,10 +643,10 @@
   },
   "referral": {
     "buttonLabel": "Gift Momentum Talk",
-    "title": "Share Momentum Talk",
+    "title": "Gift Momentum Talk!",
     "description": "",
     "messageLabel": "Your message",
-    "friendMessage": "Here's the download link for Momentum Talk I was telling you about",
+    "friendMessage": "Hey, here's a link to download Momentum Talk, the app I was telling you about",
     "copy": "Copy message",
     "copied": "Copied!"
   }
