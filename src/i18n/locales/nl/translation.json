@@ -642,12 +642,19 @@
     "processing": "Verwerking..."
   },
   "referral": {
-    "buttonLabel": "Geef Momentum Talk cadeau",
-    "title": "Geef Momentum Talk cadeau!",
-    "description": "",
-    "messageLabel": "Jouw berichtje",
-    "friendMessage": "Hé, hier is de downloadlink voor Momentum Talk, de app waar ik je over vertelde",
-    "copy": "Kopieer bericht",
-    "copied": "Gekopieerd!"
+    "buttonLabel": "Deel Momentum Talk",
+    "title": "Gift Momentum",
+    "titleAccent": "Talk.",
+    "subtitle": "Deel met een vriend, collega die je mag — of gewoon iemand die langzaam typt.",
+    "messageLabel": "Berichtje",
+    "addressLabel": "Aan",
+    "addressLines": ["Een vriend", "Ergens daarbuitens", "Aarde"],
+    "friendMessage": "Hé lieve vriend, omdat ik je mag wil ik dat jij deze app ook hebt. Het bespaart je echt tijd.",
+    "signoff": "iemand die om je geeft",
+    "tearCta": "Scheur om link te zien",
+    "copyCta": "Deel met een vriend →",
+    "copyReady": "Kopieer bericht + link →",
+    "copied": "Gekopieerd!",
+    "sentSeal": "SENT"
   }
 }

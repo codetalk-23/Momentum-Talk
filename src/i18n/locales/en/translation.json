@@ -642,12 +642,19 @@
     "processing": "Processing..."
   },
   "referral": {
-    "buttonLabel": "Gift Momentum Talk",
-    "title": "Gift Momentum Talk!",
-    "description": "",
-    "messageLabel": "Your message",
-    "friendMessage": "Hey, here's a link to download Momentum Talk, the app I was telling you about",
-    "copy": "Copy message",
-    "copied": "Copied!"
+    "buttonLabel": "Share Momentum Talk",
+    "title": "Gift Momentum",
+    "titleAccent": "Talk.",
+    "subtitle": "Share with a friend, colleague you like — or just someone who types slow.",
+    "messageLabel": "Message",
+    "addressLabel": "To",
+    "addressLines": ["A friend", "Somewhere out there", "Earth"],
+    "friendMessage": "Hey dear friend, since I like you I want you to have this app too. It'll save you time.",
+    "signoff": "a friend who cares",
+    "tearCta": "Tear to reveal link",
+    "copyCta": "Share with a friend →",
+    "copyReady": "Copy message + link →",
+    "copied": "Copied to clipboard!",
+    "sentSeal": "SENT"
   }
 }
