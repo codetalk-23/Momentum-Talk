@@ -1,6 +1,6 @@
 # Release Setup Checklist
 
-Repo: https://github.com/moos-wijnsma/Handy
+Repo: https://github.com/codetalk-23/Handy
 
 ## Status
 - [x] build.yml: ORT download URLs hersteld naar blob.handy.computer
@@ -18,7 +18,7 @@ Repo: https://github.com/moos-wijnsma/Handy
 
 ## Stap 1 — GitHub Secrets toevoegen (doe dit nu)
 
-Ga naar: https://github.com/moos-wijnsma/Handy/settings/secrets/actions
+Ga naar: https://github.com/codetalk-23/Handy/settings/secrets/actions
 
 Voeg toe:
 
@@ -50,7 +50,7 @@ Vervang de `pubkey` waarde:
 Vervang de `endpoints` URL:
 ```json
 "endpoints": [
-  "https://github.com/moos-wijnsma/Handy/releases/latest/download/latest.json"
+  "https://github.com/codetalk-23/Handy/releases/latest/download/latest.json"
 ]
 ```
 
@@ -84,7 +84,7 @@ Of via browser:
 
 ### GitHub Secrets toevoegen voor Apple signing
 
-Ga naar: https://github.com/moos-wijnsma/Handy/settings/secrets/actions
+Ga naar: https://github.com/codetalk-23/Handy/settings/secrets/actions
 
 | Secret naam | Waarde |
 |-------------|--------|
@@ -120,11 +120,11 @@ git commit -m "chore: enable updater artifacts and apple signing"
 git push
 ```
 
-Ga dan naar: https://github.com/moos-wijnsma/Handy/actions/workflows/release.yml
+Ga dan naar: https://github.com/codetalk-23/Handy/actions/workflows/release.yml
 → klik **Run workflow** → **Run workflow**
 
 De release wordt aangemaakt als draft. Zodra alle jobs groen zijn, ga je naar:
-https://github.com/moos-wijnsma/Handy/releases
+https://github.com/codetalk-23/Handy/releases
 → klik **Edit** op de draft → **Publish release**
 
 ---

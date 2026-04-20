@@ -166,7 +166,6 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
       try {
         if (permissionPlatform === "windows") {
           const microphoneGranted = await hasWindowsMicrophoneAccess();
-          console.log("[Polling] Windows microphone granted:", microphoneGranted);
 
           if (microphoneGranted) {
             setPermissions((prev) => ({ ...prev, microphone: "granted" }));
@@ -187,8 +186,6 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
           checkAccessibilityPermission(),
           checkMicrophonePermission(),
         ]);
-        console.log("[Polling] macOS permissions - accessibility:", accessibilityGranted, "microphone:", microphoneGranted);
-
         setPermissions((prev) => {
           const newState = { ...prev };
 
@@ -223,15 +220,11 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
         errorCountRef.current = 0;
       } catch (error) {
         errorCountRef.current += 1;
-        console.error(`[Polling] Error (attempt ${errorCountRef.current}/${MAX_POLLING_ERRORS}):`, error);
-
         if (errorCountRef.current >= MAX_POLLING_ERRORS) {
-          // Stop polling after too many consecutive errors
           if (pollingRef.current) {
             clearInterval(pollingRef.current);
             pollingRef.current = null;
           }
-          console.error("[Polling] Max errors reached, stopping polling");
           toast.error(t("onboarding.permissions.errors.checkFailed"));
         }
       }
@@ -263,14 +256,12 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
 
   const handleGrantMicrophone = async () => {
     try {
-      console.log(`[Grant Microphone] Requesting on ${isWindows ? "Windows" : "macOS"}`);
       if (isWindows) {
         await commands.openMicrophonePrivacySettings();
       } else {
         await requestMicrophonePermission();
       }
 
-      console.log("[Grant Microphone] Request completed, starting polling");
       setPermissions((prev) => ({ ...prev, microphone: "waiting" }));
       startPolling();
     } catch (error) {

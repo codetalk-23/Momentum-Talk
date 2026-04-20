@@ -470,7 +470,7 @@
         "description": "Set the verbosity of logging"
       },
       "updateChecks": {
-        "label": "Check for Updates",
+        "label": "Automatically check for updates",
         "description": "Automatically check for new versions of Momentum Talk"
       },
       "soundTheme": {

@@ -25,7 +25,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
 
   const { settings, isLoading } = useSettings();
   const settingsLoaded = !isLoading && settings !== null;
-  const updateChecksEnabled = settings?.update_checks_enabled ?? false;
+  const updateChecksEnabled = settings?.update_checks_enabled ?? true;
 
   const upToDateTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const isManualCheckRef = useRef(false);
@@ -33,7 +33,6 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
   const contentLengthRef = useRef(0);
 
   useEffect(() => {
-    // Wait for settings to load before doing anything
     if (!settingsLoaded) return;
 
     if (!updateChecksEnabled) {
@@ -43,14 +42,18 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
       setIsChecking(false);
       setUpdateAvailable(false);
       setShowUpToDate(false);
-      return;
+    } else {
+      checkForUpdates();
     }
+  }, [settingsLoaded, updateChecksEnabled]);
 
-    checkForUpdates();
+  // Always listen for tray "Check for Updates" regardless of the toggle setting
+  useEffect(() => {
+    if (!settingsLoaded) return;
 
-    // Listen for update check events
     const updateUnlisten = listen("check-for-updates", () => {
-      handleManualUpdateCheck();
+      isManualCheckRef.current = true;
+      checkForUpdates();
     });
 
     return () => {
@@ -59,11 +62,11 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
       }
       updateUnlisten.then((fn) => fn());
     };
-  }, [settingsLoaded, updateChecksEnabled]);
+  }, [settingsLoaded]);
 
   // Update checking functions
   const checkForUpdates = async () => {
-    if (!updateChecksEnabled || isChecking) return;
+    if (isChecking) return;
 
     try {
       setIsChecking(true);
@@ -86,7 +89,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
         }
       }
     } catch (error) {
-      console.error("Failed to check for updates:", error);
+      console.error("[UpdateChecker] Failed to check for updates:", error);
     } finally {
       setIsChecking(false);
       isManualCheckRef.current = false;
@@ -116,7 +119,6 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
       const update = await check();
 
       if (!update) {
-        console.log("No update available during install attempt");
         return;
       }
 

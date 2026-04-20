@@ -4,6 +4,7 @@ import { ShowOverlay } from "../ShowOverlay";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { ClipboardHandlingSetting } from "../ClipboardHandling";
 import { PasteMethodSetting } from "../PasteMethod";
+import { UpdateChecksToggle } from "../UpdateChecksToggle";
 
 export const AdvancedSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -16,6 +17,9 @@ export const AdvancedSettings: React.FC = () => {
       <SettingsGroup title={t("settings.advanced.groups.output")}>
         <ClipboardHandlingSetting descriptionMode="tooltip" grouped={true} />
         <PasteMethodSetting descriptionMode="tooltip" grouped={true} />
+      </SettingsGroup>
+      <SettingsGroup title="Updates">
+        <UpdateChecksToggle descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
     </div>
   );

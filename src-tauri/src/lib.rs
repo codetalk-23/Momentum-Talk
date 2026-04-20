@@ -34,7 +34,7 @@ use managers::transcription::TranscriptionManager;
 use signal_hook::consts::{SIGUSR1, SIGUSR2};
 #[cfg(unix)]
 use signal_hook::iterator::Signals;
-use std::sync::atomic::{AtomicU8, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
 use std::sync::Arc;
 use tauri::image::Image;
 pub use transcription_coordinator::TranscriptionCoordinator;
@@ -216,11 +216,8 @@ fn initialize_core_logic(app_handle: &AppHandle) {
                 show_main_window(app);
             }
             "check_updates" => {
-                let settings = settings::get_settings(app);
-                if settings.update_checks_enabled {
-                    show_main_window(app);
-                    let _ = app.emit("check-for-updates", ());
-                }
+                show_main_window(app);
+                let _ = app.emit("check-for-updates", ());
             }
             "copy_last_transcript" => {
                 tray::copy_last_transcript(app);
@@ -232,6 +229,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
                 cancel_current_operation(app);
             }
             "quit" => {
+                app.state::<Arc<AtomicBool>>().store(true, Ordering::SeqCst);
                 app.exit(0);
             }
             id if id.starts_with("model_select:") => {
@@ -507,6 +505,7 @@ pub fn run(cli_args: CliArgs) {
             Some(vec![]),
         ))
         .manage(cli_args.clone())
+        .manage(Arc::new(AtomicBool::new(false))) // quitting flag
         .setup(move |app| {
             specta_builder.mount_events(app);
 
@@ -581,25 +580,30 @@ pub fn run(cli_args: CliArgs) {
         })
         .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
-                api.prevent_close();
-                let _res = window.hide();
+                let app = window.app_handle();
+                let quitting = app.state::<Arc<AtomicBool>>().load(Ordering::SeqCst);
+                let settings = get_settings(app);
+                let tray_visible =
+                    settings.show_tray_icon && !app.state::<CliArgs>().no_tray;
 
-                #[cfg(target_os = "macos")]
-                {
-                    let settings = get_settings(&window.app_handle());
-                    let tray_visible =
-                        settings.show_tray_icon && !window.app_handle().state::<CliArgs>().no_tray;
-                    if tray_visible {
-                        // Tray is available: hide the dock icon, app lives in the tray
-                        let res = window
-                            .app_handle()
+                if tray_visible && !quitting {
+                    // Tray is available and not quitting: hide the window, app lives in the tray
+                    api.prevent_close();
+                    let _res = window.hide();
+
+                    #[cfg(target_os = "macos")]
+                    {
+                        let res = app
                             .set_activation_policy(tauri::ActivationPolicy::Accessory);
                         if let Err(e) = res {
                             log::error!("Failed to set activation policy: {}", e);
                         }
                     }
-                    // No tray: keep the dock icon visible so the user can reopen
+                } else if !tray_visible {
+                    // No tray: close the window and exit the app
+                    app.exit(0);
                 }
+                // quitting=true: let CloseRequested proceed normally so app.exit() can complete
             }
             tauri::WindowEvent::ThemeChanged(theme) => {
                 log::info!("Theme changed to: {:?}", theme);
@@ -612,9 +616,15 @@ pub fn run(cli_args: CliArgs) {
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
         .run(|app, event| {
-            #[cfg(target_os = "macos")]
-            if let tauri::RunEvent::Reopen { .. } = &event {
-                show_main_window(app);
+            match &event {
+                #[cfg(target_os = "macos")]
+                tauri::RunEvent::Reopen { .. } => {
+                    show_main_window(app);
+                }
+                tauri::RunEvent::ExitRequested { .. } => {
+                    // Exit is allowed; quitting flag in CloseRequested handles tray hide vs quit
+                }
+                _ => {}
             }
             let _ = (app, event); // suppress unused warnings on non-macOS
         });
