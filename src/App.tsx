@@ -13,9 +13,6 @@ import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Onboarding, {
   AccessibilityOnboarding,
   WelcomeScreen,
-  TestScreen,
-  ShortcutSetupScreen,
-  CompleteScreen,
 } from "./components/onboarding";
 import { ReferralModal } from "./components/ReferralModal";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
@@ -25,7 +22,7 @@ import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
-type OnboardingStep = "welcome" | "accessibility" | "model" | "test" | "shortcut" | "complete" | "done";
+type OnboardingStep = "welcome" | "accessibility" | "model" | "done";
 
 const renderSettingsContent = (section: SidebarSection) => {
   const ActiveComponent =
@@ -266,18 +263,6 @@ function App() {
   };
 
   const handleModelSelected = useCallback(() => {
-    setOnboardingStep("test");
-  }, []);
-
-  const handleTestComplete = () => {
-    setOnboardingStep("shortcut");
-  };
-
-  const handleShortcutComplete = () => {
-    setOnboardingStep("complete");
-  };
-
-  const handleCompleteScreen = useCallback(() => {
     setOnboardingStep("done");
   }, []);
 
@@ -296,18 +281,6 @@ function App() {
 
   if (onboardingStep === "model") {
     return <Onboarding onModelSelected={handleModelSelected} />;
-  }
-
-  if (onboardingStep === "test") {
-    return <TestScreen onComplete={handleTestComplete} />;
-  }
-
-  if (onboardingStep === "shortcut") {
-    return <ShortcutSetupScreen onComplete={handleShortcutComplete} />;
-  }
-
-  if (onboardingStep === "complete") {
-    return <CompleteScreen onComplete={handleCompleteScreen} />;
   }
 
   return (
