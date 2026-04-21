@@ -19,6 +19,7 @@ import Onboarding, {
 } from "./components/onboarding";
 import { ReferralModal } from "./components/ReferralModal";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
+import UpdateChecker from "./components/update-checker";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
@@ -342,6 +343,9 @@ function App() {
               <AccessibilityPermissions />
               {renderSettingsContent(currentSection)}
             </div>
+          </div>
+          <div className="border-t border-border-color bg-white px-4 py-2 flex justify-end">
+            <UpdateChecker />
           </div>
         </div>
       </div>

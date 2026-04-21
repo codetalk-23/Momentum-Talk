@@ -1,6 +1,6 @@
 [package]
 name = "Momentum-Talk"
-version = "0.8.6"
+version = "0.8.9"
 description = "Momentum Talk"
 authors = ["cjpais"]
 edition = "2021"

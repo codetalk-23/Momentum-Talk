@@ -51,16 +51,29 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
   useEffect(() => {
     if (!settingsLoaded) return;
 
-    const updateUnlisten = listen("check-for-updates", () => {
+    let unlistenFn: (() => void) | null = null;
+    let cancelled = false;
+
+    listen("check-for-updates", () => {
       isManualCheckRef.current = true;
       checkForUpdates();
+    }).then((fn) => {
+      if (cancelled) {
+        fn();
+      } else {
+        unlistenFn = fn;
+      }
     });
 
     return () => {
+      cancelled = true;
       if (upToDateTimeoutRef.current) {
         clearTimeout(upToDateTimeoutRef.current);
       }
-      updateUnlisten.then((fn) => fn());
+      if (unlistenFn) {
+        unlistenFn();
+        unlistenFn = null;
+      }
     };
   }, [settingsLoaded]);
 
@@ -70,7 +83,9 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
 
     try {
       setIsChecking(true);
+      console.log("[UpdateChecker] Checking for updates...");
       const update = await check();
+      console.log("[UpdateChecker] check() returned:", update);
 
       if (update) {
         setUpdateAvailable(true);
