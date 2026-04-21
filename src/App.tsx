@@ -13,6 +13,7 @@ import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import Onboarding, {
   AccessibilityOnboarding,
   WelcomeScreen,
+  ShortcutSetupScreen,
 } from "./components/onboarding";
 import { ReferralModal } from "./components/ReferralModal";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
@@ -22,7 +23,7 @@ import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
-type OnboardingStep = "welcome" | "accessibility" | "model" | "done";
+type OnboardingStep = "welcome" | "accessibility" | "model" | "shortcut" | "done";
 
 const renderSettingsContent = (section: SidebarSection) => {
   const ActiveComponent =
@@ -263,8 +264,12 @@ function App() {
   };
 
   const handleModelSelected = useCallback(() => {
-    setOnboardingStep("done");
+    setOnboardingStep("shortcut");
   }, []);
+
+  const handleShortcutComplete = () => {
+    setOnboardingStep("done");
+  };
 
   // Still checking onboarding status
   if (onboardingStep === null) {
@@ -281,6 +286,10 @@ function App() {
 
   if (onboardingStep === "model") {
     return <Onboarding onModelSelected={handleModelSelected} />;
+  }
+
+  if (onboardingStep === "shortcut") {
+    return <ShortcutSetupScreen onComplete={handleShortcutComplete} />;
   }
 
   return (
