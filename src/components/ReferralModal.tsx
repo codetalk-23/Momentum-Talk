@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const DOWNLOAD_URL = "https://www.momentumai.nl/talk";
-const URL_SHORT = "momentumai.nl/talk";
+const DOWNLOAD_URL = "https://talk.momentumai.nl/";
+const URL_SHORT = "talk.momentumai.nl";
 
 interface ReferralModalProps {
   onClose: () => void;
@@ -16,7 +16,6 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
   const message = `${t("referral.friendMessage")}\n\n${DOWNLOAD_URL}`;
 
   useEffect(() => {
-    closeRef.current?.focus();
     const h = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", h);
     return () => document.removeEventListener("keydown", h);
@@ -182,7 +181,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
                 }}
               >
                 <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.7, fontFamily: "monospace" }}>NL</div>
-                <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, fontStyle: "italic" }}>M</div>
+                <img src="/logo-transparent.png" alt="Momentum Talk" style={{ width: 34, height: 34, objectFit: "contain", filter: "invert(1)", opacity: 0.9 }} />
                 <div style={{ fontSize: 8, letterSpacing: "0.12em", textTransform: "uppercase", opacity: 0.7, fontFamily: "monospace" }}>Talk</div>
               </div>
             </div>

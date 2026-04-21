@@ -645,7 +645,7 @@
     "buttonLabel": "Share Momentum Talk",
     "title": "Gift Momentum",
     "titleAccent": "Talk.",
-    "subtitle": "Share with a friend, colleague you like — or just someone who types slow.",
+    "subtitle": "Share with a friend, colleague you like or just someone who types slow.",
     "messageLabel": "Message",
     "addressLabel": "To",
     "addressLines": ["A friend", "Somewhere out there", "Earth"],
@@ -655,6 +655,6 @@
     "copyCta": "Share with a friend →",
     "copyReady": "Copy message + link →",
     "copied": "Copied to clipboard!",
-    "sentSeal": "SENT"
+    "sentSeal": "COPIED"
   }
 }

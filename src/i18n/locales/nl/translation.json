@@ -645,7 +645,7 @@
     "buttonLabel": "Deel Momentum Talk",
     "title": "Gift Momentum",
     "titleAccent": "Talk.",
-    "subtitle": "Deel met een vriend, collega die je mag — of gewoon iemand die langzaam typt.",
+    "subtitle": "Deel met een vriend, collega die je mag of gewoon iemand die langzaam typt.",
     "messageLabel": "Berichtje",
     "addressLabel": "Aan",
     "addressLines": ["Een vriend", "Ergens daarbuitens", "Aarde"],
@@ -655,6 +655,6 @@
     "copyCta": "Deel met een vriend →",
     "copyReady": "Kopieer bericht + link →",
     "copied": "Gekopieerd!",
-    "sentSeal": "SENT"
+    "sentSeal": "GEKOPIEERD"
   }
 }
