@@ -89,80 +89,63 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
         }}
       >
         {/* Headline */}
-        <div style={{ textAlign: "center", color: "#fff" }}>
-          <h1
-            id="referral-title"
-            style={{
-              margin: 0,
-              fontSize: "clamp(28px, 5vw, 42px)",
-              fontWeight: 700,
-              lineHeight: 1.1,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {t("referral.title")}{" "}
-            <span style={{ color: "#52b788", fontStyle: "italic" }}>
-              {t("referral.titleAccent")}
-            </span>
-          </h1>
-          <p style={{ margin: "8px 0 0", fontSize: 14, opacity: 0.6, fontWeight: 400 }}>
-            {t("referral.subtitle")}
-          </p>
-        </div>
+        <h1
+          id="referral-title"
+          style={{
+            margin: 0,
+            fontSize: "clamp(22px, 4vw, 32px)",
+            fontWeight: 700,
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+            color: "#fff",
+          }}
+        >
+          {t("referral.title")}{" "}
+          <span style={{ color: "#52b788", fontStyle: "italic" }}>
+            {t("referral.titleAccent")}
+          </span>
+        </h1>
 
         {/* Postcard */}
         <div
           style={{
             position: "relative",
-            width: 560,
+            width: 480,
             maxWidth: "calc(100vw - 48px)",
             aspectRatio: "1.6 / 1",
             background: "#FFFFFF",
             borderRadius: 8,
             boxShadow: "0 32px 64px -20px rgba(0,0,0,0.5), 0 2px 0 rgba(0,0,0,0.06)",
             transform: "rotate(-0.8deg)",
-            overflow: "visible",
             display: "grid",
             gridTemplateColumns: "1fr 1px 1fr",
+            overflow: "hidden",
           }}
         >
-          {/* Inner clip for card contents */}
-          <div style={{ overflow: "hidden", borderRadius: "8px 0 0 8px", padding: "22px 24px", position: "relative", display: "flex", flexDirection: "column" }}>
-            <div style={monoLabel}>{t("referral.messageLabel")}</div>
-            <p
-              style={{
-                margin: "12px 0 0",
-                fontSize: 17,
-                lineHeight: 1.45,
-                color: "#0A0A0A",
-                fontStyle: "italic",
-                flex: 1,
-              }}
-            >
+          {/* LEFT — message */}
+          <div style={{ padding: "28px 26px", display: "flex", alignItems: "center" }}>
+            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.5, color: "#0A0A0A", fontStyle: "italic" }}>
               "{t("referral.friendMessage")}"
             </p>
-            <div style={{ fontSize: 13, color: "#888", fontStyle: "italic", marginTop: 8 }}>
-              — {t("referral.signoff")}
-            </div>
           </div>
 
           {/* Divider */}
           <div style={{ background: "#E8E8E8" }} />
 
-          {/* RIGHT */}
-          <div style={{ position: "relative", padding: "22px 24px", borderRadius: "0 8px 8px 0", overflow: "hidden" }}>
+          {/* RIGHT — stamp + url */}
+          <div style={{ position: "relative", padding: "20px 20px" }}>
             {/* Stamp */}
             <div
               style={{
                 position: "absolute",
                 top: 16,
-                right: 18,
-                width: 72,
-                height: 84,
+                right: 16,
+                width: 60,
+                height: 70,
                 background: "#1A3D2B",
                 color: "#fff",
                 borderRadius: 3,
-                padding: 5,
+                padding: 4,
                 boxShadow: "0 4px 12px -4px rgba(0,0,0,0.25)",
                 clipPath:
                   "polygon(0 4%,4% 0,8% 4%,12% 0,16% 4%,20% 0,24% 4%,28% 0,32% 4%,36% 0,40% 4%,44% 0,48% 4%,52% 0,56% 4%,60% 0,64% 4%,68% 0,72% 4%,76% 0,80% 4%,84% 0,88% 4%,92% 0,96% 4%,100% 0,100% 100%,0 100%)",
@@ -180,72 +163,30 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
                   gap: 2,
                 }}
               >
-                <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.7, fontFamily: "monospace" }}>NL</div>
-                <img src="/logo-transparent.png" alt="Momentum Talk" style={{ width: 34, height: 34, objectFit: "contain", filter: "invert(1)", opacity: 0.9 }} />
-                <div style={{ fontSize: 8, letterSpacing: "0.12em", textTransform: "uppercase", opacity: 0.7, fontFamily: "monospace" }}>Talk</div>
+                <img src="/logo-transparent.png" alt="Momentum Talk" style={{ width: 28, height: 28, objectFit: "contain", filter: "invert(1)", opacity: 0.9 }} />
+                <div style={{ fontSize: 7, letterSpacing: "0.12em", textTransform: "uppercase", opacity: 0.7, fontFamily: "monospace" }}>Talk</div>
               </div>
             </div>
 
-            {/* Postmark */}
+            {/* URL */}
             <div
               style={{
                 position: "absolute",
-                top: 52,
-                right: 88,
-                width: 62,
-                height: 62,
-                borderRadius: 999,
-                border: "1.5px solid rgba(26,61,43,0.35)",
-                color: "rgba(26,61,43,0.55)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "monospace",
-                fontSize: 8,
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                textAlign: "center",
-                lineHeight: 1.4,
-                transform: "rotate(-12deg)",
-              }}
-            >
-              AMS<br />·2026·<br />MMT
-            </div>
-
-            {/* Address */}
-            <div style={{ marginTop: 16 }}>
-              <div style={monoLabel}>{t("referral.addressLabel")}</div>
-              <div style={{ marginTop: 8, fontSize: 15, lineHeight: 1.6, color: "#0A0A0A" }}>
-                {(t("referral.addressLines", { returnObjects: true }) as string[]).map((ln, i) => (
-                  <div key={i}>{ln}</div>
-                ))}
-              </div>
-            </div>
-
-            {/* Link strip at bottom */}
-            <div
-              style={{
-                position: "absolute",
+                bottom: 20,
                 left: 20,
                 right: 20,
-                bottom: 16,
-                height: 32,
-                borderRadius: 5,
-                border: "1px dashed rgba(0,0,0,0.18)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 fontFamily: "monospace",
-                fontSize: 12,
-                letterSpacing: "0.04em",
+                fontSize: 11,
+                letterSpacing: "0.06em",
                 color: "#1A3D2B",
-                fontWeight: 600,
+                fontWeight: 700,
+                opacity: 0.75,
               }}
             >
               {URL_SHORT}
             </div>
 
-            {/* Copied seal — center-right of the card */}
+            {/* Copied seal */}
             {copied && (
               <div
                 style={{
@@ -266,6 +207,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
                     borderRadius: 4,
                     fontFamily: "monospace",
                     fontWeight: 700,
+                    whiteSpace: "nowrap",
                     fontSize: 13,
                     letterSpacing: "0.28em",
                     background: "rgba(255,255,255,0.92)",
@@ -307,13 +249,6 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ onClose }) => {
   );
 };
 
-const monoLabel: React.CSSProperties = {
-  fontFamily: "monospace",
-  fontSize: 9,
-  letterSpacing: "0.22em",
-  textTransform: "uppercase",
-  color: "#888",
-};
 
 const KEYFRAMES = `
 @keyframes rm-fade { from { opacity: 0 } to { opacity: 1 } }
