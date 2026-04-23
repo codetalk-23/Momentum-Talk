@@ -722,6 +722,38 @@ Section WebView2
   ${EndIf}
 SectionEnd
 
+Section VCRedist
+  ; MSVCP140_1.dll is part of the VC++ 2015-2022 runtime, required by ONNX Runtime (ort-directml).
+  ; Check registry for an existing installation before downloading.
+  ${If} ${RunningX64}
+    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64" "Installed"
+  ${Else}
+    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86" "Installed"
+  ${EndIf}
+  ${If} $0 <> 1
+    DetailPrint "Downloading Visual C++ 2015-2022 Redistributable..."
+    ${If} ${RunningX64}
+      NSISdl::download "https://aka.ms/vs/17/release/vc_redist.x64.exe" "$TEMP\vc_redist.exe"
+    ${Else}
+      NSISdl::download "https://aka.ms/vs/17/release/vc_redist.x86.exe" "$TEMP\vc_redist.exe"
+    ${EndIf}
+    Pop $0
+    ${If} $0 == "success"
+      DetailPrint "Installing Visual C++ 2015-2022 Redistributable..."
+      ExecWait '"$TEMP\vc_redist.exe" /quiet /norestart' $1
+      Delete "$TEMP\vc_redist.exe"
+      ${If} $1 = 0
+      ${OrIf} $1 = 3010
+        DetailPrint "Visual C++ Redistributable installed successfully."
+      ${Else}
+        DetailPrint "Visual C++ Redistributable installation may have failed (code: $1)."
+      ${EndIf}
+    ${Else}
+      DetailPrint "Could not download Visual C++ Redistributable. If the app fails to start, install it manually from microsoft.com/en-us/download/details.aspx?id=48145"
+    ${EndIf}
+  ${EndIf}
+SectionEnd
+
 Section Install
   SetOutPath $INSTDIR
 
