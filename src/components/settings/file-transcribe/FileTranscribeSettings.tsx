@@ -56,7 +56,7 @@ export const FileTranscribeSettings: React.FC = () => {
       .onDragDropEvent((event) => {
         if (event.payload.type === "over") {
           if (!transcribing) setDragOver(true);
-        } else if (event.payload.type === "leave" || event.payload.type === "cancelled") {
+        } else if (event.payload.type === "leave") {
           setDragOver(false);
         } else if (event.payload.type === "drop") {
           setDragOver(false);
