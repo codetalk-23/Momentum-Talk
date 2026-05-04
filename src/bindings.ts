@@ -745,6 +745,25 @@ async unloadModelManually() : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+/**
+ * Decode an audio file and transcribe it in 30-second chunks, emitting
+ * `file-transcription-progress` events as each chunk completes.
+ * Supports MP3, WAV, M4A, FLAC, OGG via Symphonia; auto-resamples to 16 kHz.
+ */
+async transcribeFile(path: string) : Promise<Result<string, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("transcribe_file", { path }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Cancel a running file transcription.
+ */
+async cancelFileTranscription() : Promise<void> {
+    await TAURI_INVOKE("cancel_file_transcription");
+},
 async getHistoryEntries(cursor: number | null, limit: number | null) : Promise<Result<PaginatedHistory, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("get_history_entries", { cursor, limit }) };

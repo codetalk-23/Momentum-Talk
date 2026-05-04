@@ -11,6 +11,7 @@ import {
   AboutSettings,
   PostProcessingSettings,
   ModelsSettings,
+  FileTranscribeSettings,
 } from "./settings";
 
 export type SidebarSection = keyof typeof SECTIONS_CONFIG;
@@ -44,6 +45,12 @@ export const SECTIONS_CONFIG = {
   history: {
     labelKey: "sidebar.history",
     component: HistorySettings,
+    enabled: (_?: any) => true,
+    visibleInNav: true,
+  },
+  transcribeFile: {
+    labelKey: "sidebar.transcribeFile",
+    component: FileTranscribeSettings,
     enabled: (_?: any) => true,
     visibleInNav: true,
   },
