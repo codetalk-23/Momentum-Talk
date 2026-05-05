@@ -14,7 +14,6 @@ import Onboarding, {
   AccessibilityOnboarding,
   WelcomeScreen,
   ShortcutSetupScreen,
-  VideoScreen,
 } from "./components/onboarding";
 import { ReferralModal } from "./components/ReferralModal";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
@@ -24,7 +23,7 @@ import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
-type OnboardingStep = "welcome" | "video" | "accessibility" | "model" | "shortcut" | "done";
+type OnboardingStep = "welcome" | "accessibility" | "model" | "shortcut" | "done";
 
 const renderSettingsContent = (section: SidebarSection) => {
   const ActiveComponent =
@@ -257,10 +256,6 @@ function App() {
   };
 
   const handleWelcomeComplete = () => {
-    setOnboardingStep("video");
-  };
-
-  const handleVideoComplete = () => {
     setOnboardingStep("accessibility");
   };
 
@@ -283,10 +278,6 @@ function App() {
 
   if (onboardingStep === "welcome") {
     return <WelcomeScreen onComplete={handleWelcomeComplete} />;
-  }
-
-  if (onboardingStep === "video") {
-    return <VideoScreen onComplete={handleVideoComplete} />;
   }
 
   if (onboardingStep === "accessibility") {
