@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Momentum Talk",
-  "version": "0.8.13",
+  "version": "0.8.14",
   "identifier": "com.pais.MomentumTalk",
   "build": {
     "beforeDevCommand": "bun run dev",
@@ -64,6 +64,15 @@
       }
     },
     "windows": {
+      "windowsSign": {
+        "command": "trusted-signing-cli",
+        "commandArgs": [
+          "-e", "https://eus.codesigning.azure.net/",
+          "-a", "momentum-talk",
+          "-c", "momentumtalk",
+          "%1"
+        ]
+      },
       "nsis": {
         "template": "nsis/installer.nsi"
       }
