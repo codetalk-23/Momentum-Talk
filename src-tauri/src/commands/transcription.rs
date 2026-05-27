@@ -62,7 +62,7 @@ pub fn cancel_file_transcription(cancel: State<'_, FileTranscriptionCancel>) {
 
 /// Decode an audio file and transcribe it in 30-second chunks, emitting
 /// `file-transcription-progress` events as each chunk completes.
-/// Supports MP3, WAV, M4A, FLAC, OGG via Symphonia; auto-resamples to 16 kHz.
+/// Supports MP3, WAV, M4A, MP4, AAC, ALAC, FLAC, OGG, Opus, WebM via Symphonia; auto-resamples to 16 kHz.
 #[tauri::command]
 #[specta::specta]
 pub async fn transcribe_file(
@@ -100,6 +100,11 @@ pub async fn transcribe_file(
     .await
     .map_err(|e| format!("Thread error: {}", e))?
     .map_err(|e| e)?;
+
+    // Check cancel before waiting on model load (decoding may have taken a while)
+    if cancel_flag.load(Ordering::Relaxed) {
+        return Err("Cancelled".to_string());
+    }
 
     // If the model isn't loaded yet, surface that — first-time loads can take 10s+
     if !tm.is_model_loaded() {

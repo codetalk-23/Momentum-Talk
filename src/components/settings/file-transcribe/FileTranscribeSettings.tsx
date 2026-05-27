@@ -14,7 +14,7 @@ interface ProgressEvent {
   stage: Stage;
 }
 
-const AUDIO_EXTENSIONS = new Set(["mp3", "wav", "m4a", "aac", "flac", "ogg", "opus"]);
+const AUDIO_EXTENSIONS = new Set(["mp3", "wav", "m4a", "mp4", "aac", "alac", "flac", "ogg", "opus", "webm"]);
 
 export const FileTranscribeSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -29,8 +29,10 @@ export const FileTranscribeSettings: React.FC = () => {
   const [stage, setStage] = useState<Stage>("decoding");
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const downloadTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const unlistenRef = useRef<(() => void) | null>(null);
 
@@ -85,7 +87,7 @@ export const FileTranscribeSettings: React.FC = () => {
       filters: [
         {
           name: "Audio",
-          extensions: ["mp3", "wav", "m4a", "aac", "flac", "ogg", "opus"],
+          extensions: ["mp3", "wav", "m4a", "mp4", "aac", "flac", "ogg", "opus", "webm", "alac"],
         },
       ],
     });
@@ -155,6 +157,9 @@ export const FileTranscribeSettings: React.FC = () => {
     a.download = `${baseName}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+    setDownloaded(true);
+    if (downloadTimerRef.current) clearTimeout(downloadTimerRef.current);
+    downloadTimerRef.current = setTimeout(() => setDownloaded(false), 2000);
   };
 
   const showOutput = transcribing || result !== null || streamText.length > 0;
@@ -272,7 +277,7 @@ export const FileTranscribeSettings: React.FC = () => {
                 disabled={!streamText && !result}
                 className="text-xs px-3 py-1 rounded-md border border-border-color bg-white hover:bg-warm-grey disabled:opacity-40 transition-colors text-near-black"
               >
-                {t("fileTranscribe.download")}
+                {downloaded ? t("fileTranscribe.downloaded") : t("fileTranscribe.download")}
               </button>
             </div>
           </div>

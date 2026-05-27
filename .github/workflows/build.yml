@@ -337,6 +337,20 @@ jobs:
             '.bundle.linux.deb.files["/usr/lib/libonnxruntime.so"] = $so | .bundle.linux.deb.files["/usr/lib/libonnxruntime.so.1"] = $so1 | .bundle.linux.deb.files["/usr/lib/libonnxruntime.so.1.24.2"] = $sov' \
             src-tauri/tauri.conf.json > tmp.json && mv tmp.json src-tauri/tauri.conf.json
 
+      - name: Download ffmpeg for Windows (x64)
+        if: contains(inputs.platform, 'windows') && !contains(inputs.target, 'aarch64')
+        shell: pwsh
+        run: |
+          $version = "7.1.1"
+          $url = "https://github.com/GyanD/codexffmpeg/releases/download/$version/ffmpeg-$version-essentials_build.zip"
+          Write-Host "Downloading ffmpeg $version from $url"
+          Invoke-WebRequest -Uri $url -OutFile ffmpeg.zip
+          Expand-Archive ffmpeg.zip -DestinationPath ffmpeg_tmp
+          New-Item -ItemType Directory -Force -Path "src-tauri\resources" | Out-Null
+          Copy-Item "ffmpeg_tmp\ffmpeg-$version-essentials_build\bin\ffmpeg.exe" "src-tauri\resources\ffmpeg.exe"
+          Remove-Item -Recurse -Force ffmpeg.zip, ffmpeg_tmp
+          Write-Host "ffmpeg.exe placed at src-tauri/resources/ffmpeg.exe"
+
       - name: Build with Tauri
         uses: tauri-apps/tauri-action@v0
         env:

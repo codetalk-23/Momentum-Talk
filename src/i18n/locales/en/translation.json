@@ -33,9 +33,10 @@
     "copy": "Copy",
     "copied": "Copied!",
     "download": "Download .txt",
-    "supportedFormats": "Supports MP3, WAV, M4A, FLAC, OGG",
+    "downloaded": "Saved!",
+    "supportedFormats": "Supports MP3, WAV, M4A, MP4, AAC, ALAC, FLAC, OGG, Opus, WebM",
     "dropOrSelect": "Drop an audio file here",
-    "unsupportedFormat": "Unsupported file format. Please use MP3, WAV, M4A, FLAC, OGG, or OPUS."
+    "unsupportedFormat": "Unsupported file format. Please use MP3, WAV, M4A, MP4, AAC, ALAC, FLAC, OGG, Opus, or WebM."
   },
   "onboarding": {
     "preparingModel": "Setting up your Momentum Talk workspace",

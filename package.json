@@ -1,7 +1,7 @@
 {
   "name": "Momentum-Talk-app",
   "private": true,
-  "version": "0.8.13",
+  "version": "0.8.15",
   "type": "module",
   "scripts": {
     "dev": "vite",
