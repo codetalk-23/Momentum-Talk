@@ -64,6 +64,7 @@
       }
     },
     "windows": {
+      "signCommand": "trusted-signing-cli -e https://eus.codesigning.azure.net/ -a momentum-talk -c momentumtalk %1",
       "nsis": {
         "template": "nsis/installer.nsi"
       }
