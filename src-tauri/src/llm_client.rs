@@ -4,10 +4,27 @@ use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, REFER
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-#[derive(Debug, Serialize)]
-struct ChatMessage {
-    role: String,
-    content: String,
+#[derive(Debug, Clone, Serialize)]
+pub struct ChatMessage {
+    pub role: String,
+    pub content: String,
+}
+
+impl ChatMessage {
+    pub fn new(role: &str, content: impl Into<String>) -> Self {
+        Self {
+            role: role.to_string(),
+            content: content.into(),
+        }
+    }
+}
+
+/// Optional sampling parameters. Fields are omitted from the request when `None`,
+/// so existing providers keep their server-side defaults.
+#[derive(Debug, Clone, Default)]
+pub struct SamplingParams {
+    pub temperature: Option<f32>,
+    pub max_tokens: Option<u32>,
 }
 
 #[derive(Debug, Serialize)]
@@ -42,6 +59,10 @@ struct ChatCompletionRequest {
     reasoning_effort: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     reasoning: Option<ReasoningConfig>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    temperature: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    max_tokens: Option<u32>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -96,11 +117,14 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
     Ok(headers)
 }
 
-/// Create an HTTP client with provider-specific headers
+/// Create an HTTP client with provider-specific headers.
+/// Timeouts keep a hung provider from stalling the paste pipeline indefinitely.
 fn create_client(provider: &PostProcessProvider, api_key: &str) -> Result<reqwest::Client, String> {
     let headers = build_headers(provider, api_key)?;
     reqwest::Client::builder()
         .default_headers(headers)
+        .connect_timeout(std::time::Duration::from_secs(10))
+        .timeout(std::time::Duration::from_secs(120))
         .build()
         .map_err(|e| format!("Failed to build HTTP client: {}", e))
 }
@@ -134,6 +158,7 @@ pub async fn send_chat_completion(
 /// system_prompt is used as the system message when provided
 /// reasoning_effort sets the OpenAI-style top-level field (e.g., "none", "low", "medium", "high")
 /// reasoning sets the OpenRouter-style nested object (effort + exclude)
+#[allow(clippy::too_many_arguments)]
 pub async fn send_chat_completion_with_schema(
     provider: &PostProcessProvider,
     api_key: String,
@@ -144,29 +169,49 @@ pub async fn send_chat_completion_with_schema(
     reasoning_effort: Option<String>,
     reasoning: Option<ReasoningConfig>,
 ) -> Result<Option<String>, String> {
+    // Build messages vector
+    let mut messages = Vec::new();
+
+    // Add system prompt if provided
+    if let Some(system) = system_prompt {
+        messages.push(ChatMessage::new("system", system));
+    }
+
+    // Add user message
+    messages.push(ChatMessage::new("user", user_content));
+
+    send_chat_completion_with_messages(
+        provider,
+        api_key,
+        model,
+        messages,
+        json_schema,
+        reasoning_effort,
+        reasoning,
+        SamplingParams::default(),
+    )
+    .await
+}
+
+/// Send a chat completion request with a full messages array (e.g. few-shot
+/// example pairs for small local models) plus optional schema and sampling params.
+#[allow(clippy::too_many_arguments)]
+pub async fn send_chat_completion_with_messages(
+    provider: &PostProcessProvider,
+    api_key: String,
+    model: &str,
+    messages: Vec<ChatMessage>,
+    json_schema: Option<Value>,
+    reasoning_effort: Option<String>,
+    reasoning: Option<ReasoningConfig>,
+    sampling: SamplingParams,
+) -> Result<Option<String>, String> {
     let base_url = provider.base_url.trim_end_matches('/');
     let url = format!("{}/chat/completions", base_url);
 
     debug!("Sending chat completion request to: {}", url);
 
     let client = create_client(provider, &api_key)?;
-
-    // Build messages vector
-    let mut messages = Vec::new();
-
-    // Add system prompt if provided
-    if let Some(system) = system_prompt {
-        messages.push(ChatMessage {
-            role: "system".to_string(),
-            content: system,
-        });
-    }
-
-    // Add user message
-    messages.push(ChatMessage {
-        role: "user".to_string(),
-        content: user_content,
-    });
 
     // Build response_format if schema is provided
     let response_format = json_schema.map(|schema| ResponseFormat {
@@ -184,6 +229,8 @@ pub async fn send_chat_completion_with_schema(
         response_format,
         reasoning_effort,
         reasoning,
+        temperature: sampling.temperature,
+        max_tokens: sampling.max_tokens,
     };
 
     let response = client

@@ -18,6 +18,7 @@ import { ProviderSelect } from "../PostProcessingSettingsApi/ProviderSelect";
 import { BaseUrlField } from "../PostProcessingSettingsApi/BaseUrlField";
 import { ApiKeyField } from "../PostProcessingSettingsApi/ApiKeyField";
 import { ModelSelect } from "../PostProcessingSettingsApi/ModelSelect";
+import { LocalModelSection } from "../PostProcessingSettingsApi/LocalModelSection";
 import { usePostProcessProviderState } from "../PostProcessingSettingsApi/usePostProcessProviderState";
 import { ShortcutInput } from "../ShortcutInput";
 import { useSettings } from "../../../hooks/useSettings";
@@ -50,6 +51,8 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
             {t("settings.postProcessing.api.appleIntelligence.unavailable")}
           </Alert>
         ) : null
+      ) : state.isLocalProvider ? (
+        <LocalModelSection />
       ) : (
         <>
           {state.selectedProvider?.id === "custom" && (
@@ -96,7 +99,7 @@ const PostProcessingSettingsApiComponent: React.FC = () => {
         </>
       )}
 
-      {!state.isAppleProvider && (
+      {!state.isAppleProvider && !state.isLocalProvider && (
         <SettingContainer
           title={t("settings.postProcessing.api.model.title")}
           description={

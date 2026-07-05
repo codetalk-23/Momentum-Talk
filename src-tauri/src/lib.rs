@@ -162,6 +162,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     );
     let history_manager =
         Arc::new(HistoryManager::new(app_handle).expect("Failed to initialize history manager"));
+    let local_llm_manager = Arc::new(managers::local_llm::LocalLlmManager::new(app_handle));
 
     // Apply accelerator preferences before any model loads
     managers::transcription::apply_accelerator_settings(app_handle);
@@ -171,6 +172,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     app_handle.manage(model_manager.clone());
     app_handle.manage(transcription_manager.clone());
     app_handle.manage(history_manager.clone());
+    app_handle.manage(local_llm_manager.clone());
     app_handle.manage(commands::transcription::FileTranscriptionCancel(Arc::new(
         std::sync::atomic::AtomicBool::new(false),
     )));
@@ -397,6 +399,10 @@ pub fn run(cli_args: CliArgs) {
             commands::models::is_model_loading,
             commands::models::has_any_models_available,
             commands::models::has_any_models_or_downloads,
+            commands::local_llm::get_local_llm_status,
+            commands::local_llm::download_local_llm,
+            commands::local_llm::cancel_local_llm_download,
+            commands::local_llm::delete_local_llm,
             commands::audio::update_microphone_mode,
             commands::audio::get_microphone_mode,
             commands::audio::get_windows_microphone_permission_status,
@@ -588,8 +594,7 @@ pub fn run(cli_args: CliArgs) {
                 let app = window.app_handle();
                 let quitting = app.state::<Arc<AtomicBool>>().load(Ordering::SeqCst);
                 let settings = get_settings(app);
-                let tray_visible =
-                    settings.show_tray_icon && !app.state::<CliArgs>().no_tray;
+                let tray_visible = settings.show_tray_icon && !app.state::<CliArgs>().no_tray;
 
                 if tray_visible && !quitting {
                     // Tray is available and not quitting: hide the window, app lives in the tray
@@ -598,8 +603,7 @@ pub fn run(cli_args: CliArgs) {
 
                     #[cfg(target_os = "macos")]
                     {
-                        let res = app
-                            .set_activation_policy(tauri::ActivationPolicy::Accessory);
+                        let res = app.set_activation_policy(tauri::ActivationPolicy::Accessory);
                         if let Err(e) = res {
                             log::error!("Failed to set activation policy: {}", e);
                         }
@@ -628,6 +632,14 @@ pub fn run(cli_args: CliArgs) {
                 }
                 tauri::RunEvent::ExitRequested { .. } => {
                     // Exit is allowed; quitting flag in CloseRequested handles tray hide vs quit
+                }
+                tauri::RunEvent::Exit => {
+                    // Kill the local LLM sidecar so no llama-server outlives the app
+                    if let Some(manager) =
+                        app.try_state::<Arc<managers::local_llm::LocalLlmManager>>()
+                    {
+                        manager.shutdown();
+                    }
                 }
                 _ => {}
             }

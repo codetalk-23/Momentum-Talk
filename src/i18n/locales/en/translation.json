@@ -442,6 +442,17 @@
           "placeholderWithOptions": "Search or select a model",
           "placeholderNoOptions": "Type a model name",
           "refreshModels": "Refresh models"
+        },
+        "localLlm": {
+          "title": "Local model",
+          "description": "Runs a small language model fully on your device. No API key or internet connection is needed after the download. It adds punctuation, paragraphs and lists to your transcripts.",
+          "download": "Download model (~{{size}} MB)",
+          "downloaded": "Model downloaded",
+          "delete": "Delete",
+          "cancel": "Cancel",
+          "verifying": "Verifying…",
+          "extracting": "Extracting…",
+          "unsupported": "The built-in local model is not available on this platform."
         }
       },
       "prompts": {

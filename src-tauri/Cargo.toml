@@ -68,6 +68,7 @@ chrono = "0.4"
 rusqlite = { version = "0.37", features = ["bundled"] }
 tar = "0.4.44"
 flate2 = "1.0"
+zip = { version = "8", default-features = false, features = ["deflate"] }
 sha2 = "0.10"
 transcribe-rs = { version = "0.3.8", features = ["whisper-cpp", "onnx"] }
 symphonia = { version = "0.5", features = ["mp3", "isomp4", "aac", "alac", "ogg", "vorbis", "flac", "wav", "pcm", "mkv"] }

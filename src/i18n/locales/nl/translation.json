@@ -420,6 +420,17 @@
           "placeholderWithOptions": "Zoek of selecteer een model",
           "placeholderNoOptions": "Typ een modelnaam",
           "refreshModels": "Vernieuw modellen"
+        },
+        "localLlm": {
+          "title": "Lokaal model",
+          "description": "Draait een klein taalmodel volledig op je apparaat. Na het downloaden is er geen API-sleutel of internetverbinding nodig. Het voegt interpunctie, alinea's en lijsten toe aan je transcripties.",
+          "download": "Model downloaden (~{{size}} MB)",
+          "downloaded": "Model gedownload",
+          "delete": "Verwijderen",
+          "cancel": "Annuleren",
+          "verifying": "Verifiëren…",
+          "extracting": "Uitpakken…",
+          "unsupported": "Het ingebouwde lokale model is niet beschikbaar op dit platform."
         }
       },
       "prompts": {

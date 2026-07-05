@@ -626,6 +626,46 @@ async hasAnyModelsOrDownloads() : Promise<Result<boolean, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async getLocalLlmStatus() : Promise<Result<LocalLlmStatus, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_local_llm_status") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Download the llama-server runtime and the formatting model. The runtime is
+ * fetched first (a few MB) so early failures surface before the ~500 MB model.
+ */
+async downloadLocalLlm() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("download_local_llm") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async cancelLocalLlmDownload() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("cancel_local_llm_download") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Delete the formatting model and its runtime. Stops the server first so the
+ * mmap'd GGUF is not locked (Windows cannot delete open files).
+ */
+async deleteLocalLlm() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("delete_local_llm") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async updateMicrophoneMode(alwaysOn: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("update_microphone_mode", { alwaysOn }) };
@@ -858,7 +898,15 @@ export type AvailableAccelerators = { whisper: string[]; ort: string[]; gpu_devi
 export type BindingResponse = { success: boolean; binding: ShortcutBinding | null; error: string | null }
 export type ClipboardHandling = "dont_modify" | "copy_to_clipboard"
 export type CustomSounds = { start: boolean; stop: boolean }
-export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere"
+export type EngineType = "Whisper" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere" | 
+/**
+ * Local text LLM (GGUF) used for post-processing, not speech-to-text
+ */
+"TextLlm" | 
+/**
+ * llama-server runtime binaries that power the local text LLM
+ */
+"LlamaRuntime"
 export type GpuDeviceOption = { id: number; name: string; total_vram_mb: number }
 export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null; post_process_requested: boolean }
 export type HistoryUpdatePayload = { action: "added"; entry: HistoryEntry } | { action: "updated"; entry: HistoryEntry } | { action: "deleted"; id: number } | { action: "toggled"; id: number }
@@ -872,6 +920,19 @@ export type ImplementationChangeResult = { success: boolean;
 reset_bindings: string[] }
 export type KeyboardImplementation = "tauri" | "handy_keys"
 export type LLMPrompt = { id: string; name: string; prompt: string }
+export type LocalLlmStatus = { 
+/**
+ * Whether a llama-server runtime artifact exists for this platform
+ */
+is_supported: boolean; 
+/**
+ * Whether both the runtime and the model are downloaded
+ */
+is_available: boolean; 
+/**
+ * Whether the sidecar server is currently running
+ */
+server_running: boolean; model: ModelInfo | null; runtime: ModelInfo | null }
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
 export type ModelInfo = { id: string; name: string; description: string; filename: string; url: string | null; sha256: string | null; size_mb: number; is_downloaded: boolean; is_downloading: boolean; partial_size: number; is_directory: boolean; engine_type: EngineType; accuracy_score: number; speed_score: number; supports_translation: boolean; is_recommended: boolean; supported_languages: string[]; supports_language_selection: boolean; is_custom: boolean }
 export type ModelLoadStatus = { is_loaded: boolean; current_model: string | null }

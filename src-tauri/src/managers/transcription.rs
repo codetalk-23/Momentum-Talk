@@ -300,6 +300,14 @@ impl TranscriptionManager {
         };
 
         let loaded_engine = match model_info.engine_type {
+            EngineType::TextLlm | EngineType::LlamaRuntime => {
+                let error_msg = format!(
+                    "Model {} is a post-processing model, not a transcription model",
+                    model_id
+                );
+                emit_loading_failed(&error_msg);
+                return Err(anyhow::anyhow!(error_msg));
+            }
             EngineType::Whisper => {
                 let engine = WhisperEngine::load(&model_path).map_err(|e| {
                     let error_msg = format!("Failed to load whisper model {}: {}", model_id, e);

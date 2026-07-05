@@ -394,6 +394,17 @@
           "placeholderWithOptions": "Modell suchen oder auswählen",
           "placeholderNoOptions": "Modellnamen eingeben",
           "refreshModels": "Modelle aktualisieren"
+        },
+        "localLlm": {
+          "title": "Lokales Modell",
+          "description": "Führt ein kleines Sprachmodell vollständig auf deinem Gerät aus. Nach dem Download sind kein API-Schlüssel und keine Internetverbindung nötig. Es fügt deinen Transkripten Interpunktion, Absätze und Listen hinzu.",
+          "download": "Modell herunterladen (~{{size}} MB)",
+          "downloaded": "Modell heruntergeladen",
+          "delete": "Löschen",
+          "cancel": "Abbrechen",
+          "verifying": "Überprüfen…",
+          "extracting": "Entpacken…",
+          "unsupported": "Das integrierte lokale Modell ist auf dieser Plattform nicht verfügbar."
         }
       },
       "prompts": {

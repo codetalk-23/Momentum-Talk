@@ -27,6 +27,75 @@ pub enum EngineType {
     GigaAM,
     Canary,
     Cohere,
+    /// Local text LLM (GGUF) used for post-processing, not speech-to-text
+    TextLlm,
+    /// llama-server runtime binaries that power the local text LLM
+    LlamaRuntime,
+}
+
+impl EngineType {
+    /// Whether this engine transcribes audio. Non-ASR entries (the local LLM and
+    /// its runtime) reuse the download infrastructure but must never appear in
+    /// ASR model pickers or be auto-selected as the transcription model.
+    pub fn is_speech_to_text(&self) -> bool {
+        !matches!(self, EngineType::TextLlm | EngineType::LlamaRuntime)
+    }
+}
+
+/// Model id of the built-in local post-processing LLM
+pub const LOCAL_LLM_MODEL_ID: &str = "qwen3.5-0.8b-q4";
+/// Model id of the llama-server runtime download
+pub const LLAMA_RUNTIME_MODEL_ID: &str = "llama-server-runtime";
+
+/// Pinned llama.cpp release build for the local post-processing runtime.
+/// Returns (url, sha256, size_mb) for the current platform, or None when no
+/// official artifact exists for this target (provider is then unsupported).
+/// All Vulkan builds load backends dynamically and fall back to CPU when the
+/// Vulkan loader is missing, so one artifact per platform suffices.
+pub fn llama_runtime_asset() -> Option<(String, &'static str, u64)> {
+    const BASE: &str = "https://github.com/ggml-org/llama.cpp/releases/download/b9878";
+    let asset: Option<(&str, &str, u64)> =
+        if cfg!(all(target_os = "macos", target_arch = "aarch64")) {
+            Some((
+                "llama-b9878-bin-macos-arm64.tar.gz",
+                "3c18b48c3d4e4fb6e66c8188c6ac06849d9da6919511c061e310e18682432b57",
+                11,
+            ))
+        } else if cfg!(all(target_os = "macos", target_arch = "x86_64")) {
+            Some((
+                "llama-b9878-bin-macos-x64.tar.gz",
+                "4b62fc570e58984517bb91f12143b348ffdca6810b1fbbce781a50ec53cae081",
+                11,
+            ))
+        } else if cfg!(all(target_os = "linux", target_arch = "x86_64")) {
+            Some((
+                "llama-b9878-bin-ubuntu-vulkan-x64.tar.gz",
+                "ceaa33a9b9bbe8bd41bbb1a33eb47789fb4a603586b1cea9487b09d6b4df88f0",
+                30,
+            ))
+        } else if cfg!(all(target_os = "linux", target_arch = "aarch64")) {
+            Some((
+                "llama-b9878-bin-ubuntu-vulkan-arm64.tar.gz",
+                "d9201934a3a718f1d594be727644754b6afa9a16e97670ea3be29aac17267dfc",
+                25,
+            ))
+        } else if cfg!(all(target_os = "windows", target_arch = "x86_64")) {
+            Some((
+                "llama-b9878-bin-win-vulkan-x64.zip",
+                "089a6260b2da57a8b4929783d06ad766978732d121869ae2166657fb69fd9072",
+                31,
+            ))
+        } else if cfg!(all(target_os = "windows", target_arch = "aarch64")) {
+            Some((
+                "llama-b9878-bin-win-cpu-arm64.zip",
+                "a7f3307a62b2fdf367d62302217fdcd0a2f2723ed0fd55052f8a880b33e14fe5",
+                11,
+            ))
+        } else {
+            None
+        };
+
+    asset.map(|(file, sha, size)| (format!("{}/{}", BASE, file), sha, size))
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Type)]
@@ -610,6 +679,67 @@ impl ModelManager {
             },
         );
 
+        // Local post-processing LLM + its llama-server runtime. These reuse the
+        // download/verify/extract infrastructure but are excluded from all ASR
+        // surfaces via EngineType::is_speech_to_text().
+        available_models.insert(
+            LOCAL_LLM_MODEL_ID.to_string(),
+            ModelInfo {
+                id: LOCAL_LLM_MODEL_ID.to_string(),
+                name: "Qwen3.5 0.8B (Formatting)".to_string(),
+                description: "Small local language model that formats transcripts: punctuation, paragraphs and lists.".to_string(),
+                filename: "Qwen3.5-0.8B-Q4_K_M.gguf".to_string(),
+                url: Some(
+                    "https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/main/Qwen3.5-0.8B-Q4_K_M.gguf"
+                        .to_string(),
+                ),
+                sha256: Some(
+                    "bd258782e35f7f458f8aced1adc053e6e92e89bc735ba3be89d38a06121dc517".to_string(),
+                ),
+                size_mb: 508,
+                is_downloaded: false,
+                is_downloading: false,
+                partial_size: 0,
+                is_directory: false,
+                engine_type: EngineType::TextLlm,
+                accuracy_score: 0.0,
+                speed_score: 0.0,
+                supports_translation: false,
+                is_recommended: false,
+                supported_languages: vec![],
+                supports_language_selection: false,
+                is_custom: false,
+            },
+        );
+
+        if let Some((runtime_url, runtime_sha, runtime_size_mb)) = llama_runtime_asset() {
+            available_models.insert(
+                LLAMA_RUNTIME_MODEL_ID.to_string(),
+                ModelInfo {
+                    id: LLAMA_RUNTIME_MODEL_ID.to_string(),
+                    name: "Local LLM Runtime".to_string(),
+                    description: "llama.cpp server runtime used by the local formatting model."
+                        .to_string(),
+                    filename: "llama-server-runtime".to_string(), // Directory name
+                    url: Some(runtime_url),
+                    sha256: Some(runtime_sha.to_string()),
+                    size_mb: runtime_size_mb,
+                    is_downloaded: false,
+                    is_downloading: false,
+                    partial_size: 0,
+                    is_directory: true,
+                    engine_type: EngineType::LlamaRuntime,
+                    accuracy_score: 0.0,
+                    speed_score: 0.0,
+                    supports_translation: false,
+                    is_recommended: false,
+                    supported_languages: vec![],
+                    supports_language_selection: false,
+                    is_custom: false,
+                },
+            );
+        }
+
         // Auto-discover custom Whisper models (.bin files) in the models directory
         if let Err(e) = Self::discover_custom_whisper_models(&models_dir, &mut available_models) {
             warn!("Failed to discover custom models: {}", e);
@@ -638,9 +768,16 @@ impl ModelManager {
         Ok(manager)
     }
 
+    /// Speech-to-text models only. The local post-processing LLM and its runtime
+    /// live in the same registry but must not surface in ASR pickers, tray menus,
+    /// or onboarding gates — use `get_model_info` to access them by id.
     pub fn get_available_models(&self) -> Vec<ModelInfo> {
         let models = self.available_models.lock().unwrap();
-        models.values().cloned().collect()
+        models
+            .values()
+            .filter(|m| m.engine_type.is_speech_to_text())
+            .cloned()
+            .collect()
     }
 
     pub fn get_model_info(&self, model_id: &str) -> Option<ModelInfo> {
@@ -793,9 +930,12 @@ impl ModelManager {
 
         // If no model is selected, pick the first downloaded one
         if settings.selected_model.is_empty() {
-            // Find the first available (downloaded) model
+            // Find the first available (downloaded) ASR model — never the local LLM
             let models = self.available_models.lock().unwrap();
-            if let Some(available_model) = models.values().find(|model| model.is_downloaded) {
+            if let Some(available_model) = models
+                .values()
+                .find(|model| model.is_downloaded && model.engine_type.is_speech_to_text())
+            {
                 info!(
                     "Auto-selecting model: {} ({})",
                     available_model.id, available_model.name
@@ -984,6 +1124,15 @@ impl ModelManager {
         Ok(format!("{:x}", hasher.finalize()))
     }
 
+    /// Extract a .zip archive (used by the Windows llama-server runtime builds,
+    /// which ship as flat zip files) into `dest`.
+    fn extract_zip(archive_path: &Path, dest: &Path) -> Result<()> {
+        let file = File::open(archive_path)?;
+        let mut archive = zip::ZipArchive::new(file)?;
+        archive.extract(dest)?;
+        Ok(())
+    }
+
     pub async fn download_model(&self, model_id: &str) -> Result<()> {
         let model_info = {
             let models = self.available_models.lock().unwrap();
@@ -1024,7 +1173,10 @@ impl ModelManager {
             let mut models = self.available_models.lock().unwrap();
             if let Some(model) = models.get_mut(model_id) {
                 if model.is_downloading {
-                    info!("Download already in progress for model {}, skipping", model_id);
+                    info!(
+                        "Download already in progress for model {}, skipping",
+                        model_id
+                    );
                     return Ok(());
                 }
                 model.is_downloading = true;
@@ -1032,7 +1184,10 @@ impl ModelManager {
         }
 
         if resume_from > 0 {
-            info!("Resuming download of model {} from byte {}", model_id, resume_from);
+            info!(
+                "Resuming download of model {} from byte {}",
+                model_id, resume_from
+            );
         } else {
             info!("Starting fresh download of model {} from {}", model_id, url);
         }
@@ -1095,7 +1250,10 @@ impl ModelManager {
         let fallback_total = model_info.size_mb * 1024 * 1024;
         let total_size = if resume_from > 0 {
             // For resumed downloads, add the resume point to content length
-            resume_from + response.content_length().unwrap_or(fallback_total.saturating_sub(resume_from))
+            resume_from
+                + response
+                    .content_length()
+                    .unwrap_or(fallback_total.saturating_sub(resume_from))
         } else {
             response.content_length().unwrap_or(fallback_total)
         };
@@ -1243,13 +1401,24 @@ impl ModelManager {
             // Create temporary extraction directory
             fs::create_dir_all(&temp_extract_dir)?;
 
-            // Open the downloaded tar.gz file
-            let tar_gz = File::open(&partial_path)?;
-            let tar = GzDecoder::new(tar_gz);
-            let mut archive = Archive::new(tar);
+            // Extract the downloaded archive to the temporary directory first.
+            // Archives are tar.gz, except the Windows llama-server runtime
+            // builds which ship as flat .zip files.
+            let extract_result = if url.to_lowercase().ends_with(".zip") {
+                Self::extract_zip(&partial_path, &temp_extract_dir)
+            } else {
+                File::open(&partial_path)
+                    .map_err(anyhow::Error::from)
+                    .and_then(|tar_gz| {
+                        let tar = GzDecoder::new(tar_gz);
+                        let mut archive = Archive::new(tar);
+                        archive
+                            .unpack(&temp_extract_dir)
+                            .map_err(anyhow::Error::from)
+                    })
+            };
 
-            // Extract to the temporary directory first
-            archive.unpack(&temp_extract_dir).map_err(|e| {
+            extract_result.map_err(|e| {
                 let error_msg = format!("Failed to extract archive: {}", e);
                 // Clean up failed extraction
                 let _ = fs::remove_dir_all(&temp_extract_dir);

@@ -4,8 +4,11 @@ use crate::audio_feedback::{play_feedback_sound, play_feedback_sound_blocking, S
 use crate::audio_toolkit::{is_microphone_access_denied, is_no_input_device_error};
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::history::HistoryManager;
+use crate::managers::local_llm::LocalLlmManager;
 use crate::managers::transcription::TranscriptionManager;
-use crate::settings::{get_settings, AppSettings, APPLE_INTELLIGENCE_PROVIDER_ID};
+use crate::settings::{
+    get_settings, AppSettings, APPLE_INTELLIGENCE_PROVIDER_ID, LOCAL_LLM_PROVIDER_ID,
+};
 use crate::shortcut;
 use crate::tray::{change_tray_icon, TrayIconState};
 use crate::utils::{
@@ -63,7 +66,25 @@ fn build_system_prompt(prompt_template: &str) -> String {
     prompt_template.replace("${output}", "").trim().to_string()
 }
 
-async fn post_process_transcription(settings: &AppSettings, transcription: &str) -> Option<String> {
+/// Replace the `${custom_words}` placeholder with the user's custom words so
+/// any provider's prompt can instruct the model to preserve their spelling.
+fn substitute_custom_words(prompt_template: &str, settings: &AppSettings) -> String {
+    if !prompt_template.contains("${custom_words}") {
+        return prompt_template.to_string();
+    }
+    let words = if settings.custom_words.is_empty() {
+        "(none)".to_string()
+    } else {
+        settings.custom_words.join(", ")
+    };
+    prompt_template.replace("${custom_words}", &words)
+}
+
+async fn post_process_transcription(
+    app: &AppHandle,
+    settings: &AppSettings,
+    transcription: &str,
+) -> Option<String> {
     let provider = match settings.active_post_process_provider().cloned() {
         Some(provider) => provider,
         None => {
@@ -114,10 +135,18 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
         return None;
     }
 
+    let prompt = substitute_custom_words(&prompt, settings);
+
     debug!(
         "Starting LLM post-processing with provider '{}' (model: {})",
         provider.id, model
     );
+
+    // The built-in local model runs through the llama-server sidecar with its
+    // own few-shot message scaffolding.
+    if provider.id == LOCAL_LLM_PROVIDER_ID {
+        return post_process_with_local_llm(app, settings, &prompt, transcription).await;
+    }
 
     let api_key = settings
         .post_process_api_keys
@@ -296,6 +325,197 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
     }
 }
 
+/// Skip local formatting for transcripts that would overflow the server context
+const LOCAL_LLM_MAX_INPUT_CHARS: usize = 12_000;
+
+/// Fixed few-shot example pairs for the local model. Small models follow
+/// demonstrated behavior far more reliably than written rules: these examples
+/// carry list formatting, question preservation, custom-word correction, and
+/// non-English input. They are code, not settings, so the user's prompt stays
+/// editable while the scaffolding that makes a 0.8B model behave stays intact.
+const LOCAL_LLM_FEW_SHOT: [(&str, &str); 3] = [
+    (
+        "Reformat this transcript. Custom words: (none)\n\nTranscript:\num okay so for the launch we need to do three things first finish the landing page copy second set up the email sequence and third record the demo video also the pricing page needs a final review",
+        "Okay, so for the launch we need to do three things:\n1. Finish the landing page copy.\n2. Set up the email sequence.\n3. Record the demo video.\n\nAlso, the pricing page needs a final review.",
+    ),
+    (
+        "Reformat this transcript. Custom words: Loavies, TikTok\n\nTranscript:\ndid you see the low vees campaign on tick tock already i think it performs really well maybe we should double the budget what do you think",
+        "Did you see the Loavies campaign on TikTok already? I think it performs really well. Maybe we should double the budget, what do you think?",
+    ),
+    (
+        "Reformat this transcript. Custom words: (none)\n\nTranscript:\nja de meeting is verzet naar dinsdag drie uur kun je dat even in de agenda zetten oh en heb je de notulen van vorige week nog ik kan ze nergens vinden",
+        "Ja, de meeting is verzet naar dinsdag, drie uur. Kun je dat even in de agenda zetten?\n\nOh, en heb je de notulen van vorige week nog? Ik kan ze nergens vinden.",
+    ),
+];
+
+/// Run post-processing through the built-in llama-server sidecar.
+/// `prompt` already has `${custom_words}` substituted; `${output}` is stripped
+/// because the transcript travels as the final user message.
+async fn post_process_with_local_llm(
+    app: &AppHandle,
+    settings: &AppSettings,
+    prompt: &str,
+    transcription: &str,
+) -> Option<String> {
+    if transcription.chars().count() > LOCAL_LLM_MAX_INPUT_CHARS {
+        warn!(
+            "Transcript too long for local post-processing ({} chars), keeping raw text",
+            transcription.chars().count()
+        );
+        return None;
+    }
+
+    let manager = match app.try_state::<Arc<LocalLlmManager>>() {
+        Some(manager) => manager,
+        None => {
+            error!("Local LLM manager not initialized");
+            return None;
+        }
+    };
+
+    if !manager.is_available() {
+        debug!("Local LLM model or runtime not downloaded; skipping post-processing");
+        let _ = app.emit("local-llm-unavailable", ());
+        return None;
+    }
+
+    let port = match manager.ensure_ready().await {
+        Ok(port) => port,
+        Err(e) => {
+            error!("Local LLM server unavailable: {}", e);
+            return None;
+        }
+    };
+
+    let system_prompt = build_system_prompt(prompt);
+
+    let custom_words = if settings.custom_words.is_empty() {
+        "(none)".to_string()
+    } else {
+        settings.custom_words.join(", ")
+    };
+    let user_content = format!(
+        "Reformat this transcript. Custom words: {}\n\nTranscript:\n{}",
+        custom_words, transcription
+    );
+
+    let mut messages = Vec::with_capacity(LOCAL_LLM_FEW_SHOT.len() * 2 + 2);
+    messages.push(crate::llm_client::ChatMessage::new("system", system_prompt));
+    for (example_input, example_output) in LOCAL_LLM_FEW_SHOT {
+        messages.push(crate::llm_client::ChatMessage::new("user", example_input));
+        messages.push(crate::llm_client::ChatMessage::new(
+            "assistant",
+            example_output,
+        ));
+    }
+    messages.push(crate::llm_client::ChatMessage::new("user", user_content));
+
+    // Roughly chars/4 tokens in, same out, with 2x headroom; capped so a
+    // runaway generation can never stall the paste pipeline for long.
+    let max_tokens = ((transcription.len() / 2).clamp(200, 4096)) as u32;
+    let sampling = crate::llm_client::SamplingParams {
+        temperature: Some(0.0),
+        max_tokens: Some(max_tokens),
+    };
+
+    let local_provider = crate::settings::PostProcessProvider {
+        id: LOCAL_LLM_PROVIDER_ID.to_string(),
+        label: "Local (built-in)".to_string(),
+        base_url: format!("http://127.0.0.1:{}/v1", port),
+        allow_base_url_edit: false,
+        models_endpoint: None,
+        supports_structured_output: false,
+    };
+
+    let mut result = crate::llm_client::send_chat_completion_with_messages(
+        &local_provider,
+        String::new(),
+        "local",
+        messages.clone(),
+        None,
+        None,
+        None,
+        sampling.clone(),
+    )
+    .await;
+
+    // One respawn-and-retry when the server died between health check and request
+    if let Err(ref e) = result {
+        if e.contains("error sending request") || e.contains("Connection refused") {
+            warn!("Local LLM request failed ({}), respawning server once", e);
+            manager.stop();
+            if let Ok(port) = manager.ensure_ready().await {
+                let retry_provider = crate::settings::PostProcessProvider {
+                    base_url: format!("http://127.0.0.1:{}/v1", port),
+                    ..local_provider
+                };
+                result = crate::llm_client::send_chat_completion_with_messages(
+                    &retry_provider,
+                    String::new(),
+                    "local",
+                    messages,
+                    None,
+                    None,
+                    None,
+                    sampling,
+                )
+                .await;
+            }
+        }
+    }
+
+    manager.touch();
+
+    let content = match result {
+        Ok(Some(content)) => content,
+        Ok(None) => {
+            error!("Local LLM response has no content");
+            return None;
+        }
+        Err(e) => {
+            error!("Local LLM post-processing failed: {}", e);
+            return None;
+        }
+    };
+
+    let mut cleaned = strip_invisible_chars(content.trim());
+
+    // Defensive: strip a leaked thinking block if template kwargs ever regress
+    if let Some(rest) = cleaned.strip_prefix("<think>") {
+        cleaned = match rest.split_once("</think>") {
+            Some((_, after)) => after.trim().to_string(),
+            None => {
+                error!("Local LLM output was an unterminated thinking block");
+                return None;
+            }
+        };
+    }
+
+    if cleaned.is_empty() {
+        error!("Local LLM returned an empty response");
+        return None;
+    }
+
+    // Length-ratio sanity guard: reformatting keeps content, so output far
+    // shorter or longer than the input means dropped or hallucinated text.
+    let input_len = transcription.chars().count() as f64;
+    let output_len = cleaned.chars().count() as f64;
+    let ratio = output_len / input_len.max(1.0);
+    if ratio < 0.4 || ratio > 2.5 {
+        warn!(
+            "Local LLM output failed length sanity check (ratio {:.2}), keeping raw text",
+            ratio
+        );
+        return None;
+    }
+
+    debug!(
+        "Local LLM post-processing succeeded. Output length: {} chars",
+        cleaned.len()
+    );
+    Some(cleaned)
+}
+
 async fn maybe_convert_chinese_variant(
     settings: &AppSettings,
     transcription: &str,
@@ -361,7 +581,8 @@ pub(crate) async fn process_transcription_output(
     }
 
     if post_process {
-        if let Some(processed_text) = post_process_transcription(&settings, &final_text).await {
+        if let Some(processed_text) = post_process_transcription(app, &settings, &final_text).await
+        {
             post_processed_text = Some(processed_text.clone());
             final_text = processed_text;
 
