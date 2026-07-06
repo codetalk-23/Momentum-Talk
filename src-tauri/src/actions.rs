@@ -333,7 +333,7 @@ const LOCAL_LLM_MAX_INPUT_CHARS: usize = 12_000;
 /// carry list formatting, question preservation, custom-word correction, and
 /// non-English input. They are code, not settings, so the user's prompt stays
 /// editable while the scaffolding that makes a 0.8B model behave stays intact.
-const LOCAL_LLM_FEW_SHOT: [(&str, &str); 4] = [
+const LOCAL_LLM_FEW_SHOT: [(&str, &str); 6] = [
     // Digit-style enumeration mid-sentence + trailing prose paragraph (Dutch)
     (
         "Reformat this transcript. Custom words: (none)\n\nTranscript:\neven een update dus we moeten nog drie dingen doen 1 de teksten nakijken 2 de nieuwe logo's uploaden en 3 de mail inplannen verder nog even bellen met kees over de planning dat doe ik morgen",
@@ -343,6 +343,16 @@ const LOCAL_LLM_FEW_SHOT: [(&str, &str); 4] = [
     (
         "Reformat this transcript. Custom words: (none)\n\nTranscript:\nde nieuwe versie is echt beter want 1 hij start sneller op 2 het geheugengebruik is lager en 3 de interface is rustiger dus ik zou zeggen uitrollen",
         "De nieuwe versie is echt beter, want:\n1. Hij start sneller op.\n2. Het geheugengebruik is lager.\n3. De interface is rustiger.\n\nDus ik zou zeggen: uitrollen.",
+    ),
+    // Spelled-out number words as enumerators (Dutch "één... twee...")
+    (
+        "Reformat this transcript. Custom words: (none)\n\nTranscript:\nja ik denk het wel omdat één we hebben er de tijd voor en twee het levert direct wat op dus laten we het gewoon doen",
+        "Ja, ik denk het wel, omdat:\n1. We hebben er de tijd voor.\n2. Het levert direct wat op.\n\nDus laten we het gewoon doen.",
+    ),
+    // Word-number enumeration without a lead-in noun, items starting with "dat"
+    (
+        "Reformat this transcript. Custom words: (none)\n\nTranscript:\nja één dat we er geen tijd voor hebben en twee dat het gewoon te duur is dus ik zou het niet doen",
+        "Ja:\n1. Dat we er geen tijd voor hebben.\n2. Dat het gewoon te duur is.\n\nDus ik zou het niet doen.",
     ),
     // Topic shift -> blank line between paragraphs (English)
     (
