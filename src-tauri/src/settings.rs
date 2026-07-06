@@ -501,7 +501,10 @@ fn default_sound_theme() -> SoundTheme {
 }
 
 fn default_post_process_enabled() -> bool {
-    false
+    // On by default: with the built-in local model, post-processing no longer
+    // requires an API key, and it gracefully pastes the raw transcript when
+    // the model is not downloaded yet.
+    true
 }
 
 fn default_app_language() -> String {
@@ -513,7 +516,11 @@ fn default_show_tray_icon() -> bool {
 }
 
 fn default_post_process_provider_id() -> String {
-    "openai".to_string()
+    if crate::managers::model::llama_runtime_asset().is_some() {
+        LOCAL_LLM_PROVIDER_ID.to_string()
+    } else {
+        "openai".to_string()
+    }
 }
 
 fn default_post_process_providers() -> Vec<PostProcessProvider> {
@@ -761,6 +768,27 @@ fn ensure_post_process_defaults(settings: &mut AppSettings) -> bool {
             *existing = local_default_model;
             changed = true;
         }
+    }
+
+    // Post-processing used to require a cloud API key and shipped disabled.
+    // Stores that were clearly never configured (disabled, still on the old
+    // "openai" default, no key entered) are switched to the new default:
+    // enabled with the built-in local model. Anyone who picked a provider,
+    // entered a key, or disabled post-processing after configuring it keeps
+    // their choice (their provider is no longer "openai"-with-empty-key).
+    let openai_key_empty = settings
+        .post_process_api_keys
+        .get("openai")
+        .map(|key| key.is_empty())
+        .unwrap_or(true);
+    if !settings.post_process_enabled
+        && settings.post_process_provider_id == "openai"
+        && openai_key_empty
+        && crate::managers::model::llama_runtime_asset().is_some()
+    {
+        settings.post_process_enabled = true;
+        settings.post_process_provider_id = LOCAL_LLM_PROVIDER_ID.to_string();
+        changed = true;
     }
 
     // Post-processing silently does nothing while no prompt is selected, so
@@ -1082,6 +1110,49 @@ mod tests {
                 .unwrap(),
             crate::managers::model::LOCAL_LLM_MODEL_ID
         );
+    }
+
+    #[test]
+    fn enables_local_post_processing_for_unconfigured_stores() {
+        let mut settings = get_default_settings();
+        settings.post_process_enabled = false;
+        settings.post_process_provider_id = "openai".to_string();
+        settings
+            .post_process_api_keys
+            .insert("openai".to_string(), String::new());
+
+        ensure_post_process_defaults(&mut settings);
+
+        assert!(settings.post_process_enabled);
+        assert_eq!(settings.post_process_provider_id, LOCAL_LLM_PROVIDER_ID);
+    }
+
+    #[test]
+    fn respects_configured_cloud_provider() {
+        // A user with an API key configured keeps their setup untouched
+        let mut settings = get_default_settings();
+        settings.post_process_enabled = false;
+        settings.post_process_provider_id = "openai".to_string();
+        settings
+            .post_process_api_keys
+            .insert("openai".to_string(), "sk-real-key".to_string());
+
+        ensure_post_process_defaults(&mut settings);
+
+        assert!(!settings.post_process_enabled);
+        assert_eq!(settings.post_process_provider_id, "openai");
+    }
+
+    #[test]
+    fn respects_explicitly_disabled_local_post_processing() {
+        // Disabling post-processing while on the local provider sticks
+        let mut settings = get_default_settings();
+        settings.post_process_enabled = false;
+        settings.post_process_provider_id = LOCAL_LLM_PROVIDER_ID.to_string();
+
+        ensure_post_process_defaults(&mut settings);
+
+        assert!(!settings.post_process_enabled);
     }
 
     #[test]

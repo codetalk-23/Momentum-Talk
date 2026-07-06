@@ -57,8 +57,8 @@ export const SECTIONS_CONFIG = {
   postprocessing: {
     labelKey: "sidebar.postProcessing",
     component: PostProcessingSettings,
-    enabled: (settings) => settings?.post_process_enabled ?? false,
-    visibleInNav: false,
+    enabled: (_?: any) => true,
+    visibleInNav: true,
   },
   debug: {
     labelKey: "sidebar.debug",
