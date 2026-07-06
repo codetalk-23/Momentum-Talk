@@ -1,5 +1,4 @@
 use crate::managers::model::{ModelManager, LLAMA_RUNTIME_MODEL_ID, LOCAL_LLM_MODEL_ID};
-use crate::settings::get_settings;
 use log::{debug, info, warn};
 use std::collections::VecDeque;
 use std::fs;
@@ -16,10 +15,12 @@ use tauri::{AppHandle, Manager};
 #[cfg(windows)]
 use std::os::windows::process::CommandExt;
 
-/// Idle limit applied when the user chose "Immediately": unloading the sidecar
-/// after every single dictation would add a full model reload (0.5-3s) to each
-/// one, so a short grace period is used instead.
-const IMMEDIATE_UNLOAD_GRACE_SECS: u64 = 60;
+/// Idle window before the sidecar is stopped. Deliberately independent from the
+/// ASR `model_unload_timeout` (default 5 min): a cold server restart costs
+/// 3-18 s, which dominates dictation latency for anyone who dictates every few
+/// minutes, while the resident server costs ~1.5 GB RAM. Recording-start
+/// prewarming covers dictations after an unload.
+const IDLE_UNLOAD_SECS: u64 = 30 * 60;
 
 /// How long to wait for the server to become healthy after spawn. First load
 /// mmaps ~530 MB and may compile GPU pipelines on first-ever run.
@@ -42,6 +43,9 @@ pub struct LocalLlmManager {
     server: Arc<Mutex<Option<ServerProcess>>>,
     last_activity: Arc<AtomicU64>,
     shutdown_signal: Arc<AtomicBool>,
+    /// Serializes spawn/health-check so concurrent callers (prewarm racing a
+    /// dictation) never start two servers or hand out a killed server's port
+    spawn_lock: Arc<tokio::sync::Mutex<()>>,
     /// Tail of the server's stderr, kept for error reporting on spawn failure
     stderr_tail: Arc<Mutex<VecDeque<String>>>,
 }
@@ -55,6 +59,7 @@ impl LocalLlmManager {
             server: Arc::new(Mutex::new(None)),
             last_activity: Arc::new(AtomicU64::new(Self::now_ms())),
             shutdown_signal: Arc::new(AtomicBool::new(false)),
+            spawn_lock: Arc::new(tokio::sync::Mutex::new(())),
             stderr_tail: Arc::new(Mutex::new(VecDeque::new())),
         };
 
@@ -77,20 +82,13 @@ impl LocalLlmManager {
                         continue;
                     }
 
-                    let timeout = get_settings(&app_handle).model_unload_timeout;
-                    let limit_secs = match timeout.to_seconds() {
-                        None => continue, // Never
-                        Some(0) => IMMEDIATE_UNLOAD_GRACE_SECS,
-                        Some(s) => s,
-                    };
-
                     let idle_ms =
                         Self::now_ms().saturating_sub(last_activity.load(Ordering::Relaxed));
-                    if idle_ms > limit_secs * 1000 {
+                    if idle_ms > IDLE_UNLOAD_SECS * 1000 {
                         info!(
                             "Local LLM server idle for {}s (limit: {}s), stopping",
                             idle_ms / 1000,
-                            limit_secs
+                            IDLE_UNLOAD_SECS
                         );
                         Self::stop_server(&app_handle, &server);
                     }
@@ -131,9 +129,29 @@ impl LocalLlmManager {
         self.server.lock().unwrap().is_some()
     }
 
+    /// Start the sidecar in the background if it is not running yet, so the
+    /// model load overlaps with recording/transcription instead of adding
+    /// cold-start seconds to the paste. Cheap no-op when already warm.
+    pub fn prewarm(self: &Arc<Self>) {
+        if !self.is_available() || self.is_running() {
+            return;
+        }
+        let manager = Arc::clone(self);
+        tauri::async_runtime::spawn(async move {
+            match manager.ensure_ready().await {
+                Ok(port) => debug!("Local LLM server prewarmed on port {}", port),
+                Err(e) => debug!("Local LLM prewarm failed: {}", e),
+            }
+        });
+    }
+
     /// Ensure the sidecar is running and healthy; returns its port.
     pub async fn ensure_ready(&self) -> Result<u16, String> {
         self.touch();
+
+        // Serialize spawns: a prewarm racing a dictation must join the same
+        // startup instead of spawning a second server
+        let _spawn_guard = self.spawn_lock.lock().await;
 
         // Fast path: server already running and the process is still alive
         {

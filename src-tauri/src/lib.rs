@@ -173,6 +173,17 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     app_handle.manage(transcription_manager.clone());
     app_handle.manage(history_manager.clone());
     app_handle.manage(local_llm_manager.clone());
+
+    // Load the local formatting model at startup so the first dictation does
+    // not pay the cold start (3-18 s). No-op when the model is not downloaded.
+    {
+        let settings = settings::get_settings(app_handle);
+        if settings.post_process_enabled
+            && settings.post_process_provider_id == settings::LOCAL_LLM_PROVIDER_ID
+        {
+            local_llm_manager.prewarm();
+        }
+    }
     app_handle.manage(commands::transcription::FileTranscriptionCancel(Arc::new(
         std::sync::atomic::AtomicBool::new(false),
     )));

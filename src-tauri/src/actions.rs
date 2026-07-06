@@ -684,6 +684,17 @@ impl ShortcutAction for TranscribeAction {
         let is_always_on = settings.always_on_microphone;
         debug!("Microphone mode - always_on: {}", is_always_on);
 
+        // Warm the local formatting model while the user is still speaking, so
+        // an idle-unloaded server is loaded again by the time the dictation
+        // needs it instead of adding cold-start seconds before the paste
+        if (self.post_process || settings.post_process_enabled)
+            && settings.post_process_provider_id == LOCAL_LLM_PROVIDER_ID
+        {
+            if let Some(local_llm) = app.try_state::<Arc<LocalLlmManager>>() {
+                local_llm.prewarm();
+            }
+        }
+
         let mut recording_error: Option<String> = None;
         if is_always_on {
             // Always-on mode: Play audio feedback immediately, then apply mute after sound finishes
