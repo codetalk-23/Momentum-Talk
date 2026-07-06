@@ -333,7 +333,7 @@ const LOCAL_LLM_MAX_INPUT_CHARS: usize = 12_000;
 /// carry list formatting, question preservation, custom-word correction, and
 /// non-English input. They are code, not settings, so the user's prompt stays
 /// editable while the scaffolding that makes a 0.8B model behave stays intact.
-const LOCAL_LLM_FEW_SHOT: [(&str, &str); 6] = [
+const LOCAL_LLM_FEW_SHOT: [(&str, &str); 7] = [
     // Digit-style enumeration mid-sentence + trailing prose paragraph (Dutch)
     (
         "Reformat this transcript. Custom words: (none)\n\nTranscript:\neven een update dus we moeten nog drie dingen doen 1 de teksten nakijken 2 de nieuwe logo's uploaden en 3 de mail inplannen verder nog even bellen met kees over de planning dat doe ik morgen",
@@ -354,6 +354,11 @@ const LOCAL_LLM_FEW_SHOT: [(&str, &str); 6] = [
         "Reformat this transcript. Custom words: (none)\n\nTranscript:\nja één dat we er geen tijd voor hebben en twee dat het gewoon te duur is dus ik zou het niet doen",
         "Ja:\n1. Dat we er geen tijd voor hebben.\n2. Dat het gewoon te duur is.\n\nDus ik zou het niet doen.",
     ),
+    // Bare numbers as an idiom ("gewoon 1, 2, 3"), NOT an enumeration
+    (
+        "Reformat this transcript. Custom words: (none)\n\nTranscript:\nwe fixen dat gewoon even 1 2 3 dat is zo gebeurd en daarna gaan we door met de rest",
+        "We fixen dat gewoon even 1, 2, 3, dat is zo gebeurd. En daarna gaan we door met de rest.",
+    ),
     // Topic shift -> blank line between paragraphs (English)
     (
         "Reformat this transcript. Custom words: (none)\n\nTranscript:\nthe demo went really well they want to start next month one thing to fix is the export button it crashes on big files anyway on another topic i booked the flights for the offsite we leave on thursday",
@@ -365,6 +370,32 @@ const LOCAL_LLM_FEW_SHOT: [(&str, &str); 6] = [
         "Did you see the Loavies campaign on TikTok already? I think it performs really well. Maybe we should double the budget, what do you think?",
     ),
 ];
+
+/// ASR punctuation places periods on speech pauses, cutting sentences in half,
+/// and the small local model preserves existing punctuation instead of
+/// repairing it. Stripping punctuation first puts the input in the same shape
+/// as the few-shot examples, where the model re-punctuates reliably. Casing is
+/// kept so corrected custom words survive. Cloud providers get the original.
+fn strip_transcript_punctuation(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    let mut prev_space = false;
+    for ch in text.chars() {
+        if matches!(ch, '.' | ',' | '!' | '?' | ';' | ':') {
+            continue;
+        }
+        if ch.is_whitespace() {
+            if prev_space {
+                continue;
+            }
+            prev_space = true;
+            out.push(' ');
+        } else {
+            prev_space = false;
+            out.push(ch);
+        }
+    }
+    out.trim().to_string()
+}
 
 /// Run post-processing through the built-in llama-server sidecar.
 /// `prompt` already has `${custom_words}` substituted; `${output}` is stripped
@@ -414,7 +445,8 @@ async fn post_process_with_local_llm(
     };
     let user_content = format!(
         "Reformat this transcript. Custom words: {}\n\nTranscript:\n{}",
-        custom_words, transcription
+        custom_words,
+        strip_transcript_punctuation(transcription)
     );
 
     let mut messages = Vec::with_capacity(LOCAL_LLM_FEW_SHOT.len() * 2 + 2);
@@ -963,3 +995,24 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
     );
     map
 });
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn strips_punctuation_and_collapses_whitespace() {
+        assert_eq!(
+            strip_transcript_punctuation("Oké, even. Een test?  Ja!"),
+            "Oké even Een test Ja"
+        );
+    }
+
+    #[test]
+    fn keeps_casing_and_content_characters() {
+        assert_eq!(
+            strip_transcript_punctuation("MomentumTalk werkt top-notch; echt waar."),
+            "MomentumTalk werkt top-notch echt waar"
+        );
+    }
+}
