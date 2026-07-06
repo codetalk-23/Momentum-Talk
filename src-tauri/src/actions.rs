@@ -333,18 +333,26 @@ const LOCAL_LLM_MAX_INPUT_CHARS: usize = 12_000;
 /// carry list formatting, question preservation, custom-word correction, and
 /// non-English input. They are code, not settings, so the user's prompt stays
 /// editable while the scaffolding that makes a 0.8B model behave stays intact.
-const LOCAL_LLM_FEW_SHOT: [(&str, &str); 3] = [
+const LOCAL_LLM_FEW_SHOT: [(&str, &str); 4] = [
+    // Digit-style enumeration mid-sentence + trailing prose paragraph (Dutch)
     (
-        "Reformat this transcript. Custom words: (none)\n\nTranscript:\num okay so for the launch we need to do three things first finish the landing page copy second set up the email sequence and third record the demo video also the pricing page needs a final review",
-        "Okay, so for the launch we need to do three things:\n1. Finish the landing page copy.\n2. Set up the email sequence.\n3. Record the demo video.\n\nAlso, the pricing page needs a final review.",
+        "Reformat this transcript. Custom words: (none)\n\nTranscript:\neven een update dus we moeten nog drie dingen doen 1 de teksten nakijken 2 de nieuwe logo's uploaden en 3 de mail inplannen verder nog even bellen met kees over de planning dat doe ik morgen",
+        "Even een update. Dus we moeten nog drie dingen doen:\n1. De teksten nakijken.\n2. De nieuwe logo's uploaden.\n3. De mail inplannen.\n\nVerder nog even bellen met Kees over de planning. Dat doe ik morgen.",
     ),
+    // Enumeration whose items are clause fragments, not noun phrases (Dutch)
+    (
+        "Reformat this transcript. Custom words: (none)\n\nTranscript:\nde nieuwe versie is echt beter want 1 hij start sneller op 2 het geheugengebruik is lager en 3 de interface is rustiger dus ik zou zeggen uitrollen",
+        "De nieuwe versie is echt beter, want:\n1. Hij start sneller op.\n2. Het geheugengebruik is lager.\n3. De interface is rustiger.\n\nDus ik zou zeggen: uitrollen.",
+    ),
+    // Topic shift -> blank line between paragraphs (English)
+    (
+        "Reformat this transcript. Custom words: (none)\n\nTranscript:\nthe demo went really well they want to start next month one thing to fix is the export button it crashes on big files anyway on another topic i booked the flights for the offsite we leave on thursday",
+        "The demo went really well. They want to start next month. One thing to fix is the export button, it crashes on big files.\n\nAnyway, on another topic: I booked the flights for the offsite. We leave on Thursday.",
+    ),
+    // Custom words correction + question preserved as question (English)
     (
         "Reformat this transcript. Custom words: Loavies, TikTok\n\nTranscript:\ndid you see the low vees campaign on tick tock already i think it performs really well maybe we should double the budget what do you think",
         "Did you see the Loavies campaign on TikTok already? I think it performs really well. Maybe we should double the budget, what do you think?",
-    ),
-    (
-        "Reformat this transcript. Custom words: (none)\n\nTranscript:\nja de meeting is verzet naar dinsdag drie uur kun je dat even in de agenda zetten oh en heb je de notulen van vorige week nog ik kan ze nergens vinden",
-        "Ja, de meeting is verzet naar dinsdag, drie uur. Kun je dat even in de agenda zetten?\n\nOh, en heb je de notulen van vorige week nog? Ik kan ze nergens vinden.",
     ),
 ];
 

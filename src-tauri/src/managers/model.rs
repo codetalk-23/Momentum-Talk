@@ -43,7 +43,7 @@ impl EngineType {
 }
 
 /// Model id of the built-in local post-processing LLM
-pub const LOCAL_LLM_MODEL_ID: &str = "qwen3.5-0.8b-q4";
+pub const LOCAL_LLM_MODEL_ID: &str = "qwen3.5-2b-q4";
 /// Model id of the llama-server runtime download
 pub const LLAMA_RUNTIME_MODEL_ID: &str = "llama-server-runtime";
 
@@ -686,17 +686,17 @@ impl ModelManager {
             LOCAL_LLM_MODEL_ID.to_string(),
             ModelInfo {
                 id: LOCAL_LLM_MODEL_ID.to_string(),
-                name: "Qwen3.5 0.8B (Formatting)".to_string(),
+                name: "Qwen3.5 2B (Formatting)".to_string(),
                 description: "Small local language model that formats transcripts: punctuation, paragraphs and lists.".to_string(),
-                filename: "Qwen3.5-0.8B-Q4_K_M.gguf".to_string(),
+                filename: "Qwen3.5-2B-Q4_K_M.gguf".to_string(),
                 url: Some(
-                    "https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/main/Qwen3.5-0.8B-Q4_K_M.gguf"
+                    "https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q4_K_M.gguf"
                         .to_string(),
                 ),
                 sha256: Some(
-                    "bd258782e35f7f458f8aced1adc053e6e92e89bc735ba3be89d38a06121dc517".to_string(),
+                    "aaf42c8b7c3cab2bf3d69c355048d4a0ee9973d48f16c731c0520ee914699223".to_string(),
                 ),
-                size_mb: 508,
+                size_mb: 1222,
                 is_downloaded: false,
                 is_downloading: false,
                 partial_size: 0,
