@@ -243,6 +243,11 @@
       "pushToTalk": {
         "label": "Push To Talk",
         "description": "Hold to record, release to stop"
+      },
+      "smartFormatting": {
+        "title": "Smart formatting",
+        "label": "Smart formatting",
+        "description": "Formats your dictation with punctuation, paragraphs and lists using a small model that runs fully on your device. If the model is unavailable, the plain transcript is pasted instead."
       }
     },
     "models": {
@@ -681,7 +686,11 @@
     "subtitle": "Share with a friend, colleague you like or just someone who types slow.",
     "messageLabel": "Message",
     "addressLabel": "To",
-    "addressLines": ["A friend", "Somewhere out there", "Earth"],
+    "addressLines": [
+      "A friend",
+      "Somewhere out there",
+      "Earth"
+    ],
     "friendMessage": "You need this. It'll save you more time than you think.",
     "signoff": "a friend who cares",
     "tearCta": "Tear to reveal link",

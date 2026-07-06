@@ -213,6 +213,11 @@
       "pushToTalk": {
         "label": "Push-to-Talk",
         "description": "Gedrückt halten zum Aufnehmen, loslassen zum Stoppen"
+      },
+      "smartFormatting": {
+        "title": "Intelligente Formatierung",
+        "label": "Intelligente Formatierung",
+        "description": "Formatiert dein Diktat mit Interpunktion, Absätzen und Listen über ein kleines Modell, das vollständig auf deinem Gerät läuft. Ist das Modell nicht verfügbar, wird das unformatierte Transkript eingefügt."
       }
     },
     "sound": {

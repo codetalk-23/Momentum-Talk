@@ -740,7 +740,12 @@ impl ShortcutAction for TranscribeAction {
         play_feedback_sound(app, SoundType::Stop);
 
         let binding_id = binding_id.to_string(); // Clone binding_id for the async task
-        let post_process = self.post_process;
+
+        // Smart formatting is coupled to the regular transcribe flow: when the
+        // global toggle is on, every dictation is post-processed. The dedicated
+        // post-process binding keeps forcing it regardless. Failures inside
+        // post-processing always fall back to the raw transcript.
+        let post_process = self.post_process || get_settings(app).post_process_enabled;
 
         tauri::async_runtime::spawn(async move {
             let _guard = FinishGuard(ah.clone());

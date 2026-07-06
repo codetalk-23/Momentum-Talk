@@ -9,6 +9,8 @@ import { useSettings } from "../../../hooks/useSettings";
 import { VolumeSlider } from "../VolumeSlider";
 import { MuteWhileRecording } from "../MuteWhileRecording";
 import { AppLanguageSelector } from "../AppLanguageSelector";
+import { PostProcessingToggle } from "../PostProcessingToggle";
+import { LocalModelSection } from "../PostProcessingSettingsApi/LocalModelSection";
 
 export const GeneralSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -18,6 +20,10 @@ export const GeneralSettings: React.FC = () => {
       <SettingsGroup title={t("settings.general.title")}>
         <ShortcutInput shortcutId="transcribe" grouped={true} />
         <PushToTalk descriptionMode="tooltip" grouped={true} />
+      </SettingsGroup>
+      <SettingsGroup title={t("settings.general.smartFormatting.title")}>
+        <PostProcessingToggle descriptionMode="tooltip" grouped={true} />
+        <LocalModelSection />
       </SettingsGroup>
       <SettingsGroup title={t("settings.sound.title")}>
         <MicrophoneSelector descriptionMode="tooltip" grouped={true} />

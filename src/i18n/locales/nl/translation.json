@@ -221,6 +221,11 @@
       "pushToTalk": {
         "label": "Push To Talk",
         "description": "Ingedrukt houden om op te nemen, loslaten om te stoppen"
+      },
+      "smartFormatting": {
+        "title": "Slimme opmaak",
+        "label": "Slimme opmaak",
+        "description": "Maakt je dictaat op met interpunctie, alinea's en lijstjes via een klein model dat volledig op je apparaat draait. Is het model niet beschikbaar, dan wordt gewoon de kale transcriptie geplakt."
       }
     },
     "models": {
@@ -659,7 +664,11 @@
     "subtitle": "Deel met een vriend, collega die je mag of gewoon iemand die langzaam typt.",
     "messageLabel": "Berichtje",
     "addressLabel": "Aan",
-    "addressLines": ["Een vriend", "Ergens daarbuitens", "Aarde"],
+    "addressLines": [
+      "Een vriend",
+      "Ergens daarbuitens",
+      "Aarde"
+    ],
     "friendMessage": "Hé lieve vriend, omdat ik je mag wil ik dat jij deze app ook hebt. Het bespaart je echt tijd.",
     "signoff": "iemand die om je geeft",
     "tearCta": "Scheur om link te zien",

@@ -9,7 +9,6 @@ import {
   HistorySettings,
   DebugSettings,
   AboutSettings,
-  PostProcessingSettings,
   ModelsSettings,
   FileTranscribeSettings,
 } from "./settings";
@@ -51,12 +50,6 @@ export const SECTIONS_CONFIG = {
   transcribeFile: {
     labelKey: "sidebar.transcribeFile",
     component: FileTranscribeSettings,
-    enabled: (_?: any) => true,
-    visibleInNav: true,
-  },
-  postprocessing: {
-    labelKey: "sidebar.postProcessing",
-    component: PostProcessingSettings,
     enabled: (_?: any) => true,
     visibleInNav: true,
   },
