@@ -1,0 +1,16 @@
+# Added and kept up to date by codetalk-23/pr-guardian. Edits here get overwritten.
+# Every PR gets a fresh AI code + security review; see the pr-guardian README.
+name: PR Guardian
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  review:
+    uses: codetalk-23/pr-guardian/.github/workflows/review.yml@main
+    secrets: inherit
